@@ -46,6 +46,7 @@ function effectPart(name: string, size: Vector3, position: Vector3, color: Color
 }
 
 function launchProjectile(
+  source: Model,
   origin: Vector3,
   target: Vector3,
   definition: EnemyDefinition,
@@ -61,19 +62,25 @@ function launchProjectile(
   projectile.Shape = Enum.PartType.Ball;
   const direction = target.sub(origin).Unit;
   const speed = definition.boss ? 64 : 48;
+  const raycastParams = new RaycastParams();
+  raycastParams.FilterType = Enum.RaycastFilterType.Exclude;
+  raycastParams.FilterDescendantsInstances = [source, projectile];
   task.spawn(() => {
     let traveled = 0;
     while (projectile.Parent && traveled < definition.range + 25) {
       const [dt] = RunService.Heartbeat.Wait();
       const step = speed * dt;
-      projectile.Position = projectile.Position.add(direction.mul(step));
-      traveled += step;
-      const [player, root, distance] = nearestPlayer(projectile.Position, 3.2);
-      if (player && root && distance < 3.2) {
-        callbacks.damagePlayer(player, definition.damage * damageScale);
+      const displacement = direction.mul(step);
+      const hit = Workspace.Raycast(projectile.Position, displacement, raycastParams);
+      if (hit) {
+        const character = hit.Instance.FindFirstAncestorOfClass("Model");
+        const player = character ? Players.GetPlayerFromCharacter(character) : undefined;
+        if (player) callbacks.damagePlayer(player, definition.damage * damageScale);
         projectile.Destroy();
         return;
       }
+      projectile.Position = projectile.Position.add(displacement);
+      traveled += step;
     }
     projectile.Destroy();
   });
@@ -149,6 +156,8 @@ function rangedAttack(
   definition: EnemyDefinition,
   callbacks: EnemyCallbacks,
 ): void {
+  const source = root.Parent;
+  if (!source?.IsA("Model")) return;
   const count = definition.attack === "Projectile" ? 1 : (definition.projectileCount ?? 3);
   for (let index = 0; index < count; index++) {
     const spread = count === 1 ? 0 : (index - (count - 1) / 2) * 3.5;
@@ -157,15 +166,30 @@ function rangedAttack(
     const targetPosition = target.Position.add(
       new Vector3(spread, definition.attack === "Summon" ? -2 : 0, 0),
     );
-    task.delay(index * 0.1, () =>
-      launchProjectile(origin, targetPosition, definition, callbacks, count > 5 ? 0.65 : 1),
-    );
+    task.delay(index * 0.1, () => {
+      const humanoid = source.FindFirstChildOfClass("Humanoid");
+      if (source.Parent && humanoid && humanoid.Health > 0)
+        launchProjectile(
+          source,
+          origin,
+          targetPosition,
+          definition,
+          callbacks,
+          count > 5 ? 0.65 : 1,
+        );
+    });
   }
 }
 
 export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection {
   const cooldowns = new Map<Model, number>();
   const dashUntil = new Map<Model, number>();
+  CollectionService.GetInstanceRemovedSignal("Enemy").Connect((instance) => {
+    if (instance.IsA("Model")) {
+      cooldowns.delete(instance);
+      dashUntil.delete(instance);
+    }
+  });
   return RunService.Heartbeat.Connect((dt) => {
     const now = os.clock();
     for (const instance of CollectionService.GetTagged("Enemy")) {

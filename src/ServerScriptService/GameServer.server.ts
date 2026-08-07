@@ -28,10 +28,14 @@ import { startEnemySystem } from "./EnemyService";
 
 interface RuntimeState {
   progress: PlayerProgress;
+  canSave: boolean;
+  dirty: boolean;
+  saving: boolean;
   magicka: number;
   stamina: number;
   blocking: boolean;
   lastAttack: number;
+  lastSnapshotRequest: number;
 }
 
 const states = new Map<Player, RuntimeState>();
@@ -41,6 +45,7 @@ if (game.GameId !== 0) {
   if (available) store = result;
 }
 const DATASTORE_RETRY_COUNT = 3;
+const AUTOSAVE_INTERVAL_SECONDS = 60;
 const remotes = new Instance("Folder");
 remotes.Name = "RPGRemotes";
 remotes.Parent = ReplicatedStorage;
@@ -61,7 +66,7 @@ function sanitizeProgress(value: unknown): PlayerProgress {
     readonly questIndex?: unknown;
     readonly questActive?: unknown;
   };
-  if (!typeIs(saved.level, "number")) return fresh;
+  if (!isFiniteNumber(saved.level)) return fresh;
   const targetLevel = math.clamp(math.floor(saved.level), 1, LEVEL_CAP);
   let rebuilt = fresh;
   for (let level = 1; level < targetLevel; level++)
@@ -69,26 +74,30 @@ function sanitizeProgress(value: unknown): PlayerProgress {
   return {
     ...rebuilt,
     xp:
-      targetLevel < LEVEL_CAP && typeIs(saved.xp, "number")
+      targetLevel < LEVEL_CAP && isFiniteNumber(saved.xp)
         ? math.clamp(math.floor(saved.xp), 0, xpForNextLevel(targetLevel) - 1)
         : 0,
-    totalXp: typeIs(saved.totalXp, "number") ? math.max(0, math.floor(saved.totalXp)) : 0,
-    questIndex: typeIs(saved.questIndex, "number")
+    totalXp: isFiniteNumber(saved.totalXp) ? math.max(0, math.floor(saved.totalXp)) : 0,
+    questIndex: isFiniteNumber(saved.questIndex)
       ? math.clamp(math.floor(saved.questIndex), 0, QUESTS.size())
       : 0,
     questActive: saved.questActive === true,
   };
 }
 
-function loadProgress(player: Player): PlayerProgress {
-  if (!store) return createProgress();
+function isFiniteNumber(value: unknown): value is number {
+  return typeIs(value, "number") && value === value && math.abs(value) < math.huge;
+}
+
+function loadProgress(player: Player): [PlayerProgress, boolean] {
+  if (!store) return [createProgress(), false];
   for (let attempt = 1; attempt <= DATASTORE_RETRY_COUNT; attempt++) {
     const [ok, result] = pcall(() => store.GetAsync(`${player.UserId}`));
-    if (ok) return sanitizeProgress(result);
+    if (ok) return [sanitizeProgress(result), true];
     warn(`RPG progress load attempt ${attempt} failed for ${player.UserId}: ${result}`);
     if (attempt < DATASTORE_RETRY_COUNT) task.wait(attempt);
   }
-  return createProgress();
+  return [createProgress(), false];
 }
 
 function saveProgress(player: Player, progress: PlayerProgress): boolean {
@@ -100,6 +109,18 @@ function saveProgress(player: Player, progress: PlayerProgress): boolean {
     if (attempt < DATASTORE_RETRY_COUNT) task.wait(attempt);
   }
   return false;
+}
+
+function saveState(player: Player, state: RuntimeState): void {
+  if (!state.canSave || !state.dirty) return;
+  while (state.saving) task.wait();
+  state.saving = true;
+  while (state.dirty) {
+    const progress = state.progress;
+    if (!saveProgress(player, progress)) break;
+    if (state.progress === progress) state.dirty = false;
+  }
+  state.saving = false;
 }
 
 function snapshot(player: Player, state: RuntimeState): PlayerSnapshot {
@@ -147,6 +168,7 @@ function awardXp(player: Player, amount: number): void {
   const previous = state.progress;
   const result = grantXp(state.progress, amount);
   state.progress = result.progress;
+  state.dirty = true;
   if (result.unlocked.size() > 0) {
     state.magicka = math.min(
       state.progress.maxMagicka,
@@ -179,6 +201,7 @@ function completeQuest(player: Player, targetId: string): void {
   const result = completeQuestTarget(state.progress, targetId);
   if (!result.completed) return;
   state.progress = result.progress;
+  state.dirty = true;
   eventRemote.FireClient(player, {
     kind: "QuestCompleted",
     questName: result.completed.name,
@@ -275,10 +298,18 @@ requestRemote.OnServerEvent.Connect((player, raw: unknown) => {
   const state = states.get(player);
   if (!state) return;
   if (request.kind === "RequestSnapshot") {
-    sendSnapshot(player);
+    const now = os.clock();
+    if (now - state.lastSnapshotRequest >= 0.5) {
+      state.lastSnapshotRequest = now;
+      sendSnapshot(player);
+    }
   } else if (request.kind === "SetQuestActive" && typeIs(request.active, "boolean")) {
-    state.progress = setQuestActive(state.progress, request.active);
-    sendSnapshot(player);
+    const nextProgress = setQuestActive(state.progress, request.active);
+    if (nextProgress.questActive !== state.progress.questActive) {
+      state.progress = nextProgress;
+      state.dirty = true;
+      sendSnapshot(player);
+    }
   } else if (request.kind === "SetBlocking" && typeIs(request.blocking, "boolean")) {
     state.blocking = request.blocking;
   } else if (
@@ -291,14 +322,18 @@ requestRemote.OnServerEvent.Connect((player, raw: unknown) => {
 });
 
 Players.PlayerAdded.Connect((player) => {
-  const progress = loadProgress(player);
+  const [progress, canSave] = loadProgress(player);
   if (player.Parent !== Players) return;
   states.set(player, {
     progress,
+    canSave,
+    dirty: false,
+    saving: false,
     magicka: progress.maxMagicka,
     stamina: progress.maxStamina,
     blocking: false,
     lastAttack: 0,
+    lastSnapshotRequest: -math.huge,
   });
   player.CharacterAdded.Connect(() =>
     task.delay(0.2, () => {
@@ -317,7 +352,7 @@ Players.PlayerAdded.Connect((player) => {
 
 Players.PlayerRemoving.Connect((player) => {
   const state = states.get(player);
-  if (state) saveProgress(player, state.progress);
+  if (state) saveState(player, state);
   states.delete(player);
 });
 
@@ -326,11 +361,19 @@ game.BindToClose(() => {
   let completedSaveCount = 0;
   states.forEach((state, player) =>
     task.spawn(() => {
-      saveProgress(player, state.progress);
+      saveState(player, state);
       completedSaveCount += 1;
     }),
   );
   while (completedSaveCount < pendingSaveCount) task.wait();
+});
+
+task.spawn(() => {
+  while (task.wait(AUTOSAVE_INTERVAL_SECONDS)) {
+    states.forEach((state, player) => {
+      if (state.dirty) task.spawn(() => saveState(player, state));
+    });
+  }
 });
 
 buildDemoWorld();
