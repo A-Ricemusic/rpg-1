@@ -9,9 +9,6 @@ import {
 import {
   ATTACK_COOLDOWN_SECONDS,
   BLOCK_STAMINA_COST_PER_SECOND,
-  ENEMY_AGGRO_RANGE,
-  ENEMY_ATTACK_COOLDOWN_SECONDS,
-  ENEMY_ATTACK_RANGE,
   ENEMY_KILL_XP,
   LASER_DAMAGE,
   LASER_MAGICKA_COST,
@@ -27,6 +24,7 @@ import { ClientRequest, PlayerProgress, PlayerSnapshot, ServerEvent } from "shar
 import { createProgress, grantXp } from "shared/Progression";
 import { completeQuestTarget, setQuestActive } from "shared/QuestProgression";
 import { buildDemoWorld } from "./QuestWorldFactory";
+import { startEnemySystem } from "./EnemyService";
 
 interface RuntimeState {
   progress: PlayerProgress;
@@ -37,7 +35,6 @@ interface RuntimeState {
 }
 
 const states = new Map<Player, RuntimeState>();
-const enemyCooldowns = new Map<Model, number>();
 let store: DataStore | undefined;
 if (game.GameId !== 0) {
   const [available, result] = pcall(() => DataStoreService.GetDataStore("RPGProgress_v1"));
@@ -209,7 +206,6 @@ function connectEnemy(instance: Instance): void {
   template.SetAttribute("LifecycleConnected", undefined);
   humanoid.BreakJointsOnDeath = false;
   humanoid.Died.Once(() => {
-    enemyCooldowns.delete(instance);
     task.delay(5, () => {
       const parent = instance.Parent;
       if (!parent) return;
@@ -342,6 +338,13 @@ CollectionService.GetTagged("QuestCollectible").forEach(connectCollectible);
 CollectionService.GetInstanceAddedSignal("QuestCollectible").Connect(connectCollectible);
 CollectionService.GetTagged("Enemy").forEach(connectEnemy);
 CollectionService.GetInstanceAddedSignal("Enemy").Connect(connectEnemy);
+startEnemySystem({
+  damagePlayer: (player, damage) => {
+    const humanoid = player.Character?.FindFirstChildOfClass("Humanoid");
+    const state = states.get(player);
+    if (humanoid && state) humanoid.TakeDamage(math.max(0, damage) * (state.blocking ? 0.25 : 1));
+  },
+});
 
 let snapshotAccumulator = 0;
 RunService.Heartbeat.Connect((dt) => {
@@ -363,34 +366,4 @@ RunService.Heartbeat.Connect((dt) => {
     if (snapshotAccumulator >= 0.25) sendSnapshot(player);
   });
   if (snapshotAccumulator >= 0.25) snapshotAccumulator = 0;
-  CollectionService.GetTagged("Enemy").forEach((instance) => {
-    if (!instance.IsA("Model")) return;
-    const humanoid = instance.FindFirstChildOfClass("Humanoid");
-    const root = instance.FindFirstChild("HumanoidRootPart");
-    if (!humanoid || humanoid.Health <= 0 || !root?.IsA("BasePart")) return;
-    let nearest: Player | undefined;
-    let distance = ENEMY_AGGRO_RANGE;
-    Players.GetPlayers().forEach((player) => {
-      const target = player.Character?.FindFirstChild("HumanoidRootPart");
-      if (target?.IsA("BasePart")) {
-        const candidate = target.Position.sub(root.Position).Magnitude;
-        if (candidate < distance) {
-          distance = candidate;
-          nearest = player;
-        }
-      }
-    });
-    const targetRoot = nearest?.Character?.FindFirstChild("HumanoidRootPart");
-    if (!nearest || !targetRoot?.IsA("BasePart")) return;
-    humanoid.MoveTo(targetRoot.Position);
-    const now = os.clock();
-    if (distance <= ENEMY_ATTACK_RANGE && now >= (enemyCooldowns.get(instance) ?? 0)) {
-      enemyCooldowns.set(instance, now + ENEMY_ATTACK_COOLDOWN_SECONDS);
-      const targetHumanoid = nearest.Character?.FindFirstChildOfClass("Humanoid");
-      const state = states.get(nearest);
-      const damage = instance.GetAttribute("Damage");
-      if (targetHumanoid && state && typeIs(damage, "number"))
-        targetHumanoid.TakeDamage(math.max(0, damage) * (state.blocking ? 0.25 : 1));
-    }
-  });
 });
