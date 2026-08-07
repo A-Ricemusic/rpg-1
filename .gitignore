@@ -10,6 +10,8 @@ node_modules/
 # Tool output
 sourcemap.json
 *.rbxmx.lock
+/include/
+/out/
 
 # Aftman installs tools globally; keep local generated folders out if present.
 .aftman/

@@ -3,15 +3,26 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "rbxtsc",
     "format": "oxfmt --write . --ignore-path .oxfmtignore",
     "format:check": "oxfmt --check . --ignore-path .oxfmtignore",
     "lint": "oxlint \"**/*.{js,jsx,ts,tsx}\" --ignore-pattern \"node_modules/**\" --no-error-on-unmatched-pattern",
-    "typecheck": "tsc --noEmit",
-    "check": "bun run format:check && bun run typecheck && bun run lint"
+    "typecheck": "rbxtsc",
+    "test": "bun test tests",
+    "check": "bun run format:check && bun run typecheck && bun run lint && bun run test"
+  },
+  "dependencies": {
+    "@rbxts/react": "^17.3.7-ts.2",
+    "@rbxts/react-roblox": "^17.3.7-ts.2",
+    "@rbxts/services": "^1.6.0"
   },
   "devDependencies": {
+    "@rbxts/compiler-types": "^3.0.0-types.0",
+    "@rbxts/testez": "^0.4.2-ts.0",
+    "@rbxts/types": "^1.0.942",
     "oxfmt": "^0.62.0",
     "oxlint": "^1.77.0",
-    "typescript": "^7.0.2"
+    "roblox-ts": "^3.0.0",
+    "typescript": "5.5.3"
   }
 }

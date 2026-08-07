@@ -5,33 +5,50 @@
 
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
-      "$path": "src/ReplicatedStorage"
+      "Shared": {
+        "$path": "out/ReplicatedStorage/Shared"
+      },
+      "rbxts_include": {
+        "$path": "include"
+      },
+      "rbxts_packages": {
+        "$className": "Folder",
+        "node_modules": {
+          "$className": "Folder",
+          "@rbxts": {
+            "$path": "node_modules/@rbxts"
+          },
+          "@rbxts-js": {
+            "$path": "node_modules/@rbxts-js"
+          }
+        }
+      }
     },
 
     "ServerScriptService": {
       "$className": "ServerScriptService",
-      "$path": "src/ServerScriptService"
+      "$path": "out/ServerScriptService"
     },
 
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
-        "$path": "src/StarterPlayer/StarterPlayerScripts"
+        "$path": "out/StarterPlayer/StarterPlayerScripts"
       }
     },
 
     "StarterGui": {
       "$className": "StarterGui",
-      "$path": "src/StarterGui"
+      "$path": "out/StarterGui"
     },
 
     "Workspace": {
       "$className": "Workspace",
       "$properties": {
-        "FilteringEnabled": true
-      },
-      "$path": "src/Workspace"
+        "FilteringEnabled": true,
+        "StreamingEnabled": true
+      }
     }
   }
 }
