@@ -1,0 +1,17 @@
+{
+  "name": "rpg-game-1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "format": "oxfmt --write . --ignore-path .oxfmtignore",
+    "format:check": "oxfmt --check . --ignore-path .oxfmtignore",
+    "lint": "oxlint \"**/*.{js,jsx,ts,tsx}\" --ignore-pattern \"node_modules/**\" --no-error-on-unmatched-pattern",
+    "typecheck": "tsc --noEmit",
+    "check": "bun run format:check && bun run typecheck && bun run lint"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.62.0",
+    "oxlint": "^1.77.0",
+    "typescript": "^7.0.2"
+  }
+}

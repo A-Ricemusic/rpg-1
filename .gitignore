@@ -1,0 +1,15 @@
+.DS_Store
+node_modules/
+
+# Roblox Studio saves
+*.rbxl
+*.rbxlx
+*.rbxm
+*.rbxmx
+
+# Tool output
+sourcemap.json
+*.rbxmx.lock
+
+# Aftman installs tools globally; keep local generated folders out if present.
+.aftman/
