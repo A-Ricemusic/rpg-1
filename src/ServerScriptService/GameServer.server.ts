@@ -38,7 +38,11 @@ interface RuntimeState {
 
 const states = new Map<Player, RuntimeState>();
 const enemyCooldowns = new Map<Model, number>();
-const store = DataStoreService.GetDataStore("RPGProgress_v1");
+let store: DataStore | undefined;
+if (game.GameId !== 0) {
+  const [available, result] = pcall(() => DataStoreService.GetDataStore("RPGProgress_v1"));
+  if (available) store = result;
+}
 const DATASTORE_RETRY_COUNT = 3;
 const remotes = new Instance("Folder");
 remotes.Name = "RPGRemotes";
@@ -80,6 +84,7 @@ function sanitizeProgress(value: unknown): PlayerProgress {
 }
 
 function loadProgress(player: Player): PlayerProgress {
+  if (!store) return createProgress();
   for (let attempt = 1; attempt <= DATASTORE_RETRY_COUNT; attempt++) {
     const [ok, result] = pcall(() => store.GetAsync(`${player.UserId}`));
     if (ok) return sanitizeProgress(result);
@@ -90,6 +95,7 @@ function loadProgress(player: Player): PlayerProgress {
 }
 
 function saveProgress(player: Player, progress: PlayerProgress): boolean {
+  if (!store) return true;
   for (let attempt = 1; attempt <= DATASTORE_RETRY_COUNT; attempt++) {
     const [ok, message] = pcall(() => store.SetAsync(`${player.UserId}`, progress));
     if (ok) return true;
