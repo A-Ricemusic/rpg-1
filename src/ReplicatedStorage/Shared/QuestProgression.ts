@@ -7,7 +7,7 @@ export interface QuestCompletionResult {
 }
 
 export function setQuestActive(progress: PlayerProgress, active: boolean): PlayerProgress {
-  if (progress.questIndex >= QUESTS.size()) return { ...progress, questActive: false };
+  if (QUESTS[progress.questIndex] === undefined) return { ...progress, questActive: false };
   return { ...progress, questActive: active };
 }
 

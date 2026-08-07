@@ -6,6 +6,10 @@ import {
   xpForNextLevel,
 } from "../src/ReplicatedStorage/Shared/GameConfig";
 import { createProgress, grantXp } from "../src/ReplicatedStorage/Shared/Progression";
+import {
+  completeQuestTarget,
+  setQuestActive,
+} from "../src/ReplicatedStorage/Shared/QuestProgression";
 
 Object.assign(globalThis, { math: { huge: Number.POSITIVE_INFINITY, max: Math.max } });
 
@@ -51,5 +55,26 @@ describe("RPG progression contract", () => {
     const initial = createProgress();
     expect(grantXp(initial, Number.NaN).progress).toEqual(initial);
     expect(grantXp(initial, Number.POSITIVE_INFINITY).progress).toEqual(initial);
+  });
+
+  test("quest targets only advance in active sequential order", () => {
+    let progress = createProgress();
+    expect(completeQuestTarget(progress, QUESTS[0].targetId).completed).toBeUndefined();
+    progress = setQuestActive(progress, true);
+    expect(completeQuestTarget(progress, QUESTS[1].targetId).completed).toBeUndefined();
+    for (const quest of QUESTS) {
+      progress = setQuestActive(progress, true);
+      const completion = completeQuestTarget(progress, quest.targetId);
+      expect(completion.completed?.id).toBe(quest.id);
+      progress = grantXp(completion.progress, quest.xpReward).progress;
+    }
+    expect(progress.questIndex).toBe(10);
+    expect(progress.questActive).toBe(false);
+    expect(progress.level).toBe(6);
+    expect(progress.xp).toBe(110);
+    expect(progress.maxHealth).toBe(122);
+    expect(progress.maxMagicka).toBe(73);
+    expect(progress.maxStamina).toBe(98);
+    expect(setQuestActive(progress, true).questActive).toBe(false);
   });
 });
