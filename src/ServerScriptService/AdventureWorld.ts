@@ -61,6 +61,7 @@ export interface RegionLocation {
   boss: Vector3;
   enemies: Vector3[];
   resources: { item: Resource; position: Vector3 }[];
+  discoveries: { id: string; name: string; position: Vector3 }[];
 }
 export class AdventureWorld {
   readonly runtime = new Instance("Folder");
@@ -99,7 +100,16 @@ export class AdventureWorld {
         );
       const merchant = marker(["MerchantLocation", "MerchantSpawn"], new Vector3(-105, 0, -66));
       const resources = new Array<{ item: Resource; position: Vector3 }>();
+      const discoveries = new Array<{ id: string; name: string; position: Vector3 }>();
       for (const d of model?.GetDescendants() ?? []) {
+        if (d.IsA("BasePart") && d.GetAttribute("MarkerType") === "Discovery") {
+          const display = d.Parent?.GetAttribute("DisplayName");
+          discoveries.push({
+            id: d.Name,
+            name: typeIs(display, "string") ? display : (d.Parent?.Name ?? d.Name),
+            position: d.Position,
+          });
+        }
         if (d.IsA("BasePart") && d.GetAttribute("MarkerType") === "Gathering") {
           const item = d.GetAttribute("ResourceId");
           if (item === "Herb" || item === "Ore" || item === "Wood" || item === "Crystal")
@@ -144,12 +154,14 @@ export class AdventureWorld {
           ),
         ),
         resources,
+        discoveries,
       });
     });
   }
   ground(position: Vector3): Vector3 {
     if (!this.authored) return new Vector3(position.X, 0, position.Z);
     const params = new RaycastParams();
+    params.RespectCanCollide = true;
     params.FilterType = Enum.RaycastFilterType.Include;
     params.FilterDescendantsInstances = [this.authored, Workspace.Terrain];
     const hit = Workspace.Raycast(

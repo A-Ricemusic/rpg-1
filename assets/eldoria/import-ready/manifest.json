@@ -1,0 +1,506 @@
+[
+  {
+    "key": "ArmorArm__Leather",
+    "asset": "ArmorArm",
+    "material": "Leather",
+    "triangles": 448
+  },
+  {
+    "key": "ArmorArm__StormMetal",
+    "asset": "ArmorArm",
+    "material": "StormMetal",
+    "triangles": 720
+  },
+  {
+    "key": "ArmorArm__AntiqueGold",
+    "asset": "ArmorArm",
+    "material": "AntiqueGold",
+    "triangles": 1152
+  },
+  {
+    "key": "ArmorHead__StormMetal",
+    "asset": "ArmorHead",
+    "material": "StormMetal",
+    "triangles": 744
+  },
+  {
+    "key": "ArmorHead__Moonstone",
+    "asset": "ArmorHead",
+    "material": "Moonstone",
+    "triangles": 108
+  },
+  {
+    "key": "ArmorHead__AntiqueGold",
+    "asset": "ArmorHead",
+    "material": "AntiqueGold",
+    "triangles": 384
+  },
+  {
+    "key": "ArmorLeg__StormMetal",
+    "asset": "ArmorLeg",
+    "material": "StormMetal",
+    "triangles": 640
+  },
+  {
+    "key": "ArmorLeg__AntiqueGold",
+    "asset": "ArmorLeg",
+    "material": "AntiqueGold",
+    "triangles": 128
+  },
+  {
+    "key": "ArmorTorso__StormMetal",
+    "asset": "ArmorTorso",
+    "material": "StormMetal",
+    "triangles": 852
+  },
+  {
+    "key": "ArmorTorso__AntiqueGold",
+    "asset": "ArmorTorso",
+    "material": "AntiqueGold",
+    "triangles": 384
+  },
+  {
+    "key": "ArmorTorso__Moonstone",
+    "asset": "ArmorTorso",
+    "material": "Moonstone",
+    "triangles": 80
+  },
+  {
+    "key": "Arrow__Bark",
+    "asset": "Arrow",
+    "material": "Bark",
+    "triangles": 48
+  },
+  {
+    "key": "Arrow__Moonsteel",
+    "asset": "Arrow",
+    "material": "Moonsteel",
+    "triangles": 4
+  },
+  {
+    "key": "Arrow__Ivory",
+    "asset": "Arrow",
+    "material": "Ivory",
+    "triangles": 6
+  },
+  {
+    "key": "Bow__Bark",
+    "asset": "Bow",
+    "material": "Bark",
+    "triangles": 512
+  },
+  {
+    "key": "Bow__AntiqueGold",
+    "asset": "Bow",
+    "material": "AntiqueGold",
+    "triangles": 384
+  },
+  {
+    "key": "Bow__Ivory",
+    "asset": "Bow",
+    "material": "Ivory",
+    "triangles": 96
+  },
+  {
+    "key": "Bow__Leather",
+    "asset": "Bow",
+    "material": "Leather",
+    "triangles": 360
+  },
+  {
+    "key": "BriarCrown__Bark",
+    "asset": "BriarCrown",
+    "material": "Bark",
+    "triangles": 1152
+  },
+  {
+    "key": "CivilianHead__Ivory",
+    "asset": "CivilianHead",
+    "material": "Ivory",
+    "triangles": 696
+  },
+  {
+    "key": "CivilianHead__Obsidian",
+    "asset": "CivilianHead",
+    "material": "Obsidian",
+    "triangles": 240
+  },
+  {
+    "key": "CivilianHead__Bark",
+    "asset": "CivilianHead",
+    "material": "Bark",
+    "triangles": 288
+  },
+  {
+    "key": "CivilianHead__Leather",
+    "asset": "CivilianHead",
+    "material": "Leather",
+    "triangles": 744
+  },
+  {
+    "key": "Coin__GoldEdge",
+    "asset": "Coin",
+    "material": "GoldEdge",
+    "triangles": 608
+  },
+  {
+    "key": "Coin__AntiqueGold",
+    "asset": "Coin",
+    "material": "AntiqueGold",
+    "triangles": 240
+  },
+  {
+    "key": "Crystal__Moonstone",
+    "asset": "Crystal",
+    "material": "Moonstone",
+    "triangles": 100
+  },
+  {
+    "key": "ElderOak__Bark",
+    "asset": "ElderOak",
+    "material": "Bark",
+    "triangles": 2880
+  },
+  {
+    "key": "ElderOak__LeafDark",
+    "asset": "ElderOak",
+    "material": "LeafDark",
+    "triangles": 8000
+  },
+  {
+    "key": "ElderOak__LeafLight",
+    "asset": "ElderOak",
+    "material": "LeafLight",
+    "triangles": 8000
+  },
+  {
+    "key": "FernCluster__LeafLight",
+    "asset": "FernCluster",
+    "material": "LeafLight",
+    "triangles": 936
+  },
+  {
+    "key": "FernCluster__LeafDark",
+    "asset": "FernCluster",
+    "material": "LeafDark",
+    "triangles": 54
+  },
+  {
+    "key": "FrostCrown__Glacier",
+    "asset": "FrostCrown",
+    "material": "Glacier",
+    "triangles": 524
+  },
+  {
+    "key": "GlacialCrag__Glacier",
+    "asset": "GlacialCrag",
+    "material": "Glacier",
+    "triangles": 5120
+  },
+  {
+    "key": "GlacialCrag__Snow",
+    "asset": "GlacialCrag",
+    "material": "Snow",
+    "triangles": 960
+  },
+  {
+    "key": "HealingPotion__Moonstone",
+    "asset": "HealingPotion",
+    "material": "Moonstone",
+    "triangles": 528
+  },
+  {
+    "key": "HealingPotion__Moonsteel",
+    "asset": "HealingPotion",
+    "material": "Moonsteel",
+    "triangles": 64
+  },
+  {
+    "key": "HealingPotion__AntiqueGold",
+    "asset": "HealingPotion",
+    "material": "AntiqueGold",
+    "triangles": 768
+  },
+  {
+    "key": "HealingPotion__Bark",
+    "asset": "HealingPotion",
+    "material": "Bark",
+    "triangles": 108
+  },
+  {
+    "key": "Herb__LeafLight",
+    "asset": "Herb",
+    "material": "LeafLight",
+    "triangles": 14
+  },
+  {
+    "key": "MerchantPavilion__Bark",
+    "asset": "MerchantPavilion",
+    "material": "Bark",
+    "triangles": 1376
+  },
+  {
+    "key": "MerchantPavilion__AntiqueGold",
+    "asset": "MerchantPavilion",
+    "material": "AntiqueGold",
+    "triangles": 736
+  },
+  {
+    "key": "MerchantPavilion__Leather",
+    "asset": "MerchantPavilion",
+    "material": "Leather",
+    "triangles": 256
+  },
+  {
+    "key": "MesaCrag__Mesa",
+    "asset": "MesaCrag",
+    "material": "Mesa",
+    "triangles": 5120
+  },
+  {
+    "key": "MoonGate__Sandstone",
+    "asset": "MoonGate",
+    "material": "Sandstone",
+    "triangles": 3108
+  },
+  {
+    "key": "MoonGate__StoneEdge",
+    "asset": "MoonGate",
+    "material": "StoneEdge",
+    "triangles": 3504
+  },
+  {
+    "key": "MoonGate__Bark",
+    "asset": "MoonGate",
+    "material": "Bark",
+    "triangles": 512
+  },
+  {
+    "key": "MoonGate__Moss",
+    "asset": "MoonGate",
+    "material": "Moss",
+    "triangles": 240
+  },
+  {
+    "key": "MoonGate__AntiqueGold",
+    "asset": "MoonGate",
+    "material": "AntiqueGold",
+    "triangles": 1664
+  },
+  {
+    "key": "MoonGate__Moonstone",
+    "asset": "MoonGate",
+    "material": "Moonstone",
+    "triangles": 80
+  },
+  {
+    "key": "MoonGate__GoldEdge",
+    "asset": "MoonGate",
+    "material": "GoldEdge",
+    "triangles": 576
+  },
+  {
+    "key": "Ore__Basalt",
+    "asset": "Ore",
+    "material": "Basalt",
+    "triangles": 320
+  },
+  {
+    "key": "Ore__AntiqueGold",
+    "asset": "Ore",
+    "material": "AntiqueGold",
+    "triangles": 80
+  },
+  {
+    "key": "PyreCrown__Lava",
+    "asset": "PyreCrown",
+    "material": "Lava",
+    "triangles": 768
+  },
+  {
+    "key": "PyreCrown__Basalt",
+    "asset": "PyreCrown",
+    "material": "Basalt",
+    "triangles": 512
+  },
+  {
+    "key": "RuinedColumn__Sandstone",
+    "asset": "RuinedColumn",
+    "material": "Sandstone",
+    "triangles": 300
+  },
+  {
+    "key": "RuinedColumn__StoneEdge",
+    "asset": "RuinedColumn",
+    "material": "StoneEdge",
+    "triangles": 1752
+  },
+  {
+    "key": "StormCrown__AntiqueGold",
+    "asset": "StormCrown",
+    "material": "AntiqueGold",
+    "triangles": 1024
+  },
+  {
+    "key": "StormCrown__GoldEdge",
+    "asset": "StormCrown",
+    "material": "GoldEdge",
+    "triangles": 1024
+  },
+  {
+    "key": "StormObelisk__StormMetal",
+    "asset": "StormObelisk",
+    "material": "StormMetal",
+    "triangles": 708
+  },
+  {
+    "key": "StormObelisk__AntiqueGold",
+    "asset": "StormObelisk",
+    "material": "AntiqueGold",
+    "triangles": 1536
+  },
+  {
+    "key": "StormObelisk__Glacier",
+    "asset": "StormObelisk",
+    "material": "Glacier",
+    "triangles": 80
+  },
+  {
+    "key": "Sword__Moonsteel",
+    "asset": "Sword",
+    "material": "Moonsteel",
+    "triangles": 36
+  },
+  {
+    "key": "Sword__GoldEdge",
+    "asset": "Sword",
+    "material": "GoldEdge",
+    "triangles": 7040
+  },
+  {
+    "key": "Sword__AntiqueGold",
+    "asset": "Sword",
+    "material": "AntiqueGold",
+    "triangles": 11432
+  },
+  {
+    "key": "Sword__Moonstone",
+    "asset": "Sword",
+    "material": "Moonstone",
+    "triangles": 160
+  },
+  {
+    "key": "Sword__Leather",
+    "asset": "Sword",
+    "material": "Leather",
+    "triangles": 360
+  },
+  {
+    "key": "Trident__Bark",
+    "asset": "Trident",
+    "material": "Bark",
+    "triangles": 64
+  },
+  {
+    "key": "Trident__AntiqueGold",
+    "asset": "Trident",
+    "material": "AntiqueGold",
+    "triangles": 1920
+  },
+  {
+    "key": "Trident__Moonsteel",
+    "asset": "Trident",
+    "material": "Moonsteel",
+    "triangles": 576
+  },
+  {
+    "key": "Trident__GoldEdge",
+    "asset": "Trident",
+    "material": "GoldEdge",
+    "triangles": 256
+  },
+  {
+    "key": "Trident__Moonstone",
+    "asset": "Trident",
+    "material": "Moonstone",
+    "triangles": 80
+  },
+  {
+    "key": "UnderworldCrag__Obsidian",
+    "asset": "UnderworldCrag",
+    "material": "Obsidian",
+    "triangles": 5120
+  },
+  {
+    "key": "UnderworldCrag__Soul",
+    "asset": "UnderworldCrag",
+    "material": "Soul",
+    "triangles": 60
+  },
+  {
+    "key": "VoidCrown__Soul",
+    "asset": "VoidCrown",
+    "material": "Soul",
+    "triangles": 1728
+  },
+  {
+    "key": "VoidCrown__Obsidian",
+    "asset": "VoidCrown",
+    "material": "Obsidian",
+    "triangles": 256
+  },
+  {
+    "key": "VolcanicCrag__Basalt",
+    "asset": "VolcanicCrag",
+    "material": "Basalt",
+    "triangles": 5120
+  },
+  {
+    "key": "VolcanicCrag__Lava",
+    "asset": "VolcanicCrag",
+    "material": "Lava",
+    "triangles": 576
+  },
+  {
+    "key": "WayShrine__Sandstone",
+    "asset": "WayShrine",
+    "material": "Sandstone",
+    "triangles": 300
+  },
+  {
+    "key": "WayShrine__StoneEdge",
+    "asset": "WayShrine",
+    "material": "StoneEdge",
+    "triangles": 1752
+  },
+  {
+    "key": "WayShrine__AntiqueGold",
+    "asset": "WayShrine",
+    "material": "AntiqueGold",
+    "triangles": 848
+  },
+  {
+    "key": "WayShrine__GoldEdge",
+    "asset": "WayShrine",
+    "material": "GoldEdge",
+    "triangles": 512
+  },
+  {
+    "key": "WayShrine__Moonstone",
+    "asset": "WayShrine",
+    "material": "Moonstone",
+    "triangles": 80
+  },
+  {
+    "key": "Wood__Bark",
+    "asset": "Wood",
+    "material": "Bark",
+    "triangles": 64
+  },
+  {
+    "key": "Wood__Ivory",
+    "asset": "Wood",
+    "material": "Ivory",
+    "triangles": 320
+  }
+]

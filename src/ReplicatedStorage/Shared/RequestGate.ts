@@ -1,15 +1,28 @@
+import { AdventureRequest } from "./Adventure";
+const REQUEST_KINDS: readonly AdventureRequest["kind"][] = [
+  "Snapshot",
+  "ChooseParent",
+  "Equip",
+  "Attack",
+  "Ability",
+  "Buy",
+  "Sell",
+  "Craft",
+  "Upgrade",
+  "Potion",
+  "Quest",
+  "Save",
+  "Return",
+  "Travel",
+];
 export interface RequestGate {
-  requestAt: number;
-  snapshotAt: number;
+  requestTimes: Map<string, number>;
 }
-/** Background state requests must not consume the player's action budget. */
+/** Different controls may be used together; repeated requests still have independent limits. */
 export function admitRequest(gate: RequestGate, kind: string, now: number): boolean {
-  if (kind === "Snapshot") {
-    if (now - gate.snapshotAt < 0.5) return false;
-    gate.snapshotAt = now;
-    return true;
-  }
-  if (now - gate.requestAt < 0.06) return false;
-  gate.requestAt = now;
+  if (!REQUEST_KINDS.some((known) => known === kind)) return false;
+  const previous = gate.requestTimes.get(kind);
+  if (previous !== undefined && now - previous < (kind === "Snapshot" ? 0.5 : 0.06)) return false;
+  gate.requestTimes.set(kind, now);
   return true;
 }

@@ -8,6 +8,14 @@ interface EnemyCallbacks {
 const definitions = new Map<string, EnemyDefinition>();
 ALL_ENEMIES.forEach((definition) => definitions.set(definition.id, definition));
 
+function clearMeleePath(source: Model, origin: Vector3, target: BasePart): boolean {
+  const params = new RaycastParams();
+  params.FilterType = Enum.RaycastFilterType.Exclude;
+  params.FilterDescendantsInstances = target.Parent ? [source, target.Parent] : [source];
+  params.RespectCanCollide = true;
+  return Workspace.Raycast(origin, target.Position.sub(origin), params) === undefined;
+}
+
 function nearestPlayer(
   origin: Vector3,
   range: number,
@@ -254,6 +262,7 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
             delta.Unit.mul(math.min(delta.Magnitude, speed * dt)),
           );
           const params = new RaycastParams();
+          params.RespectCanCollide = true;
           params.FilterType = Enum.RaycastFilterType.Exclude;
           const excluded: Instance[] = [instance];
           for (const p of Players.GetPlayers()) if (p.Character) excluded.push(p.Character);
@@ -264,6 +273,7 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
             params,
           );
           const groundParams = new RaycastParams();
+          groundParams.RespectCanCollide = true;
           const authored = Workspace.FindFirstChild("EldoriaWorld");
           groundParams.FilterType = Enum.RaycastFilterType.Include;
           groundParams.FilterDescendantsInstances = authored
@@ -294,6 +304,11 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
         }
       }
       if (now < (cooldowns.get(instance) ?? 0) || distance > definition.range) continue;
+      if (
+        (definition.attack === "Melee" || definition.attack === "Dash") &&
+        !clearMeleePath(instance, root.Position, targetRoot)
+      )
+        continue;
       cooldowns.set(instance, now + definition.cooldown);
       const enraged = definition.boss === true && humanoid.Health / humanoid.MaxHealth <= 0.5;
       if (definition.attack === "Melee")
@@ -307,6 +322,7 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
             humanoid.Health > 0 &&
             currentRoot === targetRoot &&
             currentRoot?.IsA("BasePart") &&
+            clearMeleePath(instance, root.Position, currentRoot) &&
             currentRoot.Position.sub(root.Position).Magnitude <= 7
           )
             callbacks.damagePlayer(player, definition.damage);

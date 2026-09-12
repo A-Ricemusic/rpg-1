@@ -1,3 +1,5 @@
+> **September 12 runtime correction:** The earlier Edit-only mesh checks did not establish usable game assets. The weapon meshes were observed with empty MeshContent in both Client and Server during Play. Save As alone will not fix this. See [the required import repair](../../assets/eldoria/import-ready/README.md). Camps and routes have now had obstructive grass removed; proper FBX import and client verification remain outstanding.
+
 # Eldoria world handoff — September 12 expansion
 
 The actual Studio world now uses a forest heartland, four surrounding terrain basins, four radial roads and four outer connections. Each basin is 1,152 × 1,152 studs: approximately 14× the area of its former 340 × 280 pad. Weapons and existing NPC artwork were preserved. No gameplay scripts or runtime world builder were added.

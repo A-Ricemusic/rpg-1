@@ -32,9 +32,9 @@ export const SELL_PRICES: Record<Item, number> = {
   Potion: 8,
 };
 export const WEAPON_STATS: Record<Weapon, { damage: number; range: number; cooldown: number }> = {
-  Sword: { damage: 30, range: 10, cooldown: 0.45 },
-  Trident: { damage: 38, range: 16, cooldown: 0.65 },
-  Bow: { damage: 28, range: 150, cooldown: 0.7 },
+  Sword: { damage: 30, range: 11, cooldown: 0.38 },
+  Trident: { damage: 38, range: 16, cooldown: 0.58 },
+  Bow: { damage: 30, range: 150, cooldown: 0.6 },
 };
 export interface AdventureSave {
   version: number;
@@ -51,6 +51,7 @@ export interface AdventureSave {
   kills: number[];
   gathered: number[];
   bosses: boolean[];
+  discoveries: string[];
 }
 export interface AdventureSnapshot extends AdventureSave {
   health: number;
@@ -65,6 +66,10 @@ export interface AdventureSnapshot extends AdventureSave {
   nearForge: boolean;
   objective: string;
   navigation: string;
+  questTitle: string;
+  questBrief: string;
+  lastSaveAt: number;
+  canPersist: boolean;
 }
 export type AdventureRequest =
   | { kind: "Snapshot" }
@@ -89,6 +94,7 @@ export function freshAdventure(): AdventureSave {
     kills: [0, 0, 0, 0, 0],
     gathered: [0, 0, 0, 0, 0],
     bosses: [false, false, false, false, false],
+    discoveries: [],
   };
 }
 export function levelForXp(xp: number): number {

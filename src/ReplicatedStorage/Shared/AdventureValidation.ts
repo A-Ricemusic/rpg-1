@@ -1,4 +1,5 @@
 import { AdventureSave, freshAdventure, ITEMS, PARENTS, WEAPONS } from "./Adventure";
+import { DISCOVERY_IDS } from "./QuestFlow";
 function number(value: unknown, maximum: number): number {
   return typeIs(value, "number") && value === value && math.abs(value) < math.huge
     ? math.clamp(math.floor(value), 0, maximum)
@@ -9,6 +10,12 @@ export function sanitize(value: unknown): AdventureSave {
   if (!typeIs(value, "table")) return fresh;
   const raw = value as Partial<AdventureSave>;
   if (raw.version !== 2) return fresh;
+  if (typeIs(raw.discoveries, "table"))
+    for (let i = 0; i < 15; i++) {
+      const id = raw.discoveries[i];
+      if (DISCOVERY_IDS.some((known) => known === id) && !fresh.discoveries.includes(id))
+        fresh.discoveries.push(id);
+    }
   if (PARENTS.some((p) => p === raw.parent)) fresh.parent = raw.parent;
   fresh.coins = number(raw.coins, 10000000);
   fresh.xp = number(raw.xp, 1000000);

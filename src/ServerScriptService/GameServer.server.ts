@@ -2,6 +2,8 @@ import { updateReturn } from "shared/ReturnChannel";
 import { bearing, destination } from "shared/Navigation";
 import { admitRequest } from "shared/RequestGate";
 import { inMeleeArc } from "shared/CombatTargeting";
+import { AttackRhythm, nextStrike, QUEST_BRIEFS, QUEST_TITLES } from "shared/CombatFeel";
+import { beginQuest, discover, settleQuest } from "shared/QuestFlow";
 import { Players, ReplicatedStorage, RunService, Workspace } from "@rbxts/services";
 import {
   AdventureRequest,
@@ -24,9 +26,11 @@ import { AdventurePersistence } from "./AdventurePersistence";
 import { AdventureWorld, cloneVisual, makePart, template, Resource } from "./AdventureWorld";
 import { createEnemy } from "./EnemyFactory";
 import { startEnemySystem } from "./EnemyService";
+import { PlayerDiagnostics } from "./PlayerDiagnostics";
 
 const world = new AdventureWorld();
 const persistence = new AdventurePersistence();
+const diagnostics = new PlayerDiagnostics();
 const remotes = new Instance("Folder");
 remotes.Name = "RPGRemotes";
 remotes.Parent = ReplicatedStorage;
@@ -41,8 +45,7 @@ interface State {
   mana: number;
   attackAt: number;
   abilityAt: number;
-  requestAt: number;
-  snapshotAt: number;
+  requestTimes: Map<string, number>;
   potionAt: number;
   message: string;
   canSave: boolean;
@@ -50,6 +53,8 @@ interface State {
   saving: boolean;
   saveAt: number;
   returnAt: number;
+  lastSavedAt: number;
+  rhythm: AttackRhythm;
 }
 const states = new Map<Player, State>();
 const enemies = new Array<Model>();
@@ -69,6 +74,7 @@ function message(player: Player, text: string): void {
   if (s) {
     s.message = text;
     sync(player);
+    diagnostics.record(player, text);
   }
 }
 function sync(player: Player): void {
@@ -128,10 +134,10 @@ function sync(player: Player): void {
     stage === 0
       ? "Speak to the Oracle or accept the regional quest."
       : stage === 1
-        ? `Gather ${math.min(d.gathered[d.region], 3)}/3 • Defeat ${math.min(d.kills[d.region], 2)}/2 → Claim reward`
+        ? `Gather ${math.min(d.gathered[d.region], 3)}/3 • Defeat ${math.min(d.kills[d.region], 2)}/2`
         : stage === 2
           ? d.bosses[d.region]
-            ? "Boss defeated! Claim your reward to open the next region."
+            ? "Boss defeated! The next region is open."
             : "Defeat the regional boss. Follow the BOSS beacon."
           : d.victory
             ? "Victory! Eldoria is restored."
@@ -150,12 +156,17 @@ function sync(player: Player): void {
     nearForge: near(player, location.forge),
     objective,
     navigation,
+    questTitle: QUEST_TITLES[d.region],
+    questBrief: QUEST_BRIEFS[d.region],
+    lastSaveAt: s.lastSavedAt,
+    canPersist: s.canSave,
   };
   player.SetAttribute("Region", d.region);
   player.SetAttribute("AtCamp", near(player, location.spawn, 55));
   player.SetAttribute("DivineParent", d.parent);
   player.SetAttribute("Coins", d.coins);
   player.SetAttribute("Victory", d.victory);
+  diagnostics.update(player, d, s.saveStatus, s.canSave);
   event.FireClient(player, { kind: "Snapshot", snapshot });
 }
 function stats(player: Player): void {
@@ -269,6 +280,8 @@ function respawn(player: Player): void {
   character.WaitForChild("HumanoidRootPart", 10);
   stats(player);
   h.Health = h.MaxHealth;
+  h.WalkSpeed = 22;
+  if (s.data.parent) beginQuest(s.data);
   s.mana = 60;
   character.PivotTo(new CFrame(world.locations[s.data.region].spawn));
   if (s.data.parent) equip(player, s.data.equipped);
@@ -282,10 +295,15 @@ function save(player: Player, release = false): void {
   const s = states.get(player);
   if (!s || !s.canSave) return;
   while (s.saving) task.wait();
+  // A queued autosave must not run after another caller released this profile.
+  if (!s.canSave) return;
+  if (release) s.canSave = false;
   s.saving = true;
   const success = persistence.save(player, s.data, release);
+  if (success) s.lastSavedAt = os.time();
   s.saveStatus = success ? "Saved" : "Save failed — retrying at next autosave";
   s.saving = false;
+  diagnostics.record(player, success ? "Profile saved" : "Save failed; profile retained in memory");
   sync(player);
 }
 function beacon(parent: BasePart, text: string): void {
@@ -402,7 +420,8 @@ REGIONS.forEach((region, index) => {
         s.data.inventory[item]++;
         s.data.gathered[index]++;
         s.data.xp += 5;
-        message(player, `Collected ${item} (+5 XP).`);
+        const reward = settleQuest(s.data);
+        message(player, reward ?? `Collected ${item} (+5 XP).`);
         stats(player);
       },
       "Items",
@@ -432,7 +451,7 @@ REGIONS.forEach((region, index) => {
     spawn();
   }
 });
-function damage(player: Player, enemy: Model, amount: number): boolean {
+function damage(player: Player, enemy: Model, amount: number, label = ""): boolean {
   const s = states.get(player);
   const h = enemy.FindFirstChildOfClass("Humanoid");
   if (!s || !h || h.Health <= 0 || enemy.GetAttribute("AdventureRegion") !== s.data.region)
@@ -441,7 +460,16 @@ function damage(player: Player, enemy: Model, amount: number): boolean {
     message(player, "Complete the gathering and enemy quest before challenging the boss.");
     return false;
   }
-  h.TakeDamage(amount);
+  const dealt = math.min(h.Health, math.floor(amount));
+  h.TakeDamage(dealt);
+  event.FireAllClients({
+    kind: "Impact",
+    position: enemy.GetPivot().Position,
+    amount: dealt,
+    label,
+    playerId: player.UserId,
+    killed: h.Health <= 0,
+  });
   if (h.Health <= 0) {
     const boss = enemy.GetAttribute("Boss") === true;
     s.data.kills[s.data.region]++;
@@ -449,11 +477,9 @@ function damage(player: Player, enemy: Model, amount: number): boolean {
     s.data.coins += boss ? 100 : 18;
     const reward = enemy.GetAttribute("XpReward");
     s.data.xp += typeIs(reward, "number") ? reward : 30;
+    const questReward = settleQuest(s.data);
     stats(player);
-    message(
-      player,
-      boss ? "Boss defeated! Claim your quest reward." : "+18 coins • Enemy defeated!",
-    );
+    message(player, questReward ?? (boss ? "Boss defeated!" : "+18 coins • Enemy defeated!"));
   }
   return true;
 }
@@ -469,6 +495,9 @@ function combat(player: Player, direction: Vector3, ability: boolean): void {
     s.mana -= 20;
   } else s.attackAt = now + weapon.cooldown;
   const aim = direction.Unit;
+  const strike = ability
+    ? { combo: 0, multiplier: 1, label: "" }
+    : nextStrike(s.rhythm, s.data.equipped, now);
   const origin = p.Position.add(new Vector3(0, 1, 0));
   const params = new RaycastParams();
   params.FilterType = Enum.RaycastFilterType.Exclude;
@@ -508,14 +537,25 @@ function combat(player: Player, direction: Vector3, ability: boolean): void {
       const facing = horizontal.Magnitude > 0.1 ? horizontal : p.CFrame.LookVector;
       hit = inMeleeArc(facing.X, facing.Z, delta.X, delta.Z);
     } else {
-      hit = s.data.parent === "Hades" || delta.Magnitude < 3 || aim.Dot(delta.Unit) > 0.35;
+      const horizontal = new Vector3(aim.X, 0, aim.Z);
+      const facing = horizontal.Magnitude > 0.1 ? horizontal.Unit : p.CFrame.LookVector;
+      const offset = new Vector3(delta.X, 0, delta.Z);
+      hit = s.data.parent === "Hades" || offset.Magnitude < 3 || facing.Dot(offset.Unit) > 0.35;
     }
     if (!hit) continue;
     if (!ranged) {
       const sight = Workspace.Raycast(origin, delta, params);
       if (sight && !sight.Instance.IsDescendantOf(enemy)) continue;
     }
-    if (!damage(player, enemy, power)) {
+    const tip = !ability && s.data.equipped === "Trident" && delta.Magnitude >= 8;
+    if (
+      !damage(
+        player,
+        enemy,
+        power * (tip ? 1.25 : strike.multiplier),
+        tip ? "TIP STRIKE" : strike.label,
+      )
+    ) {
       rejected = true;
       continue;
     }
@@ -524,16 +564,25 @@ function combat(player: Player, direction: Vector3, ability: boolean): void {
   }
   if (ability && s.data.parent === "Hades") {
     const h = player.Character?.FindFirstChildOfClass("Humanoid");
-    if (h) h.Health = math.min(h.MaxHealth, h.Health + 15);
+    if (h && hits > 0) h.Health = math.min(h.MaxHealth, h.Health + math.min(30, hits * 10));
   }
   if (!rejected && s.message === previousMessage) {
     s.message =
       hits > 0
-        ? `Hit ${hits} target(s) • ${power} damage`
-        : "No target hit. Move closer for melee; aim at an enemy with Click/R or center the view for the Attack button.";
+        ? `Hit ${hits} target(s)${strike.label !== "" ? ` • ${strike.label}` : ""}`
+        : "No target hit. Aim the crosshair at a foe; move closer for melee.";
   }
   const effect = ability ? s.data.parent : s.data.equipped;
-  event.FireAllClients({ kind: "Effect", origin, position: endpoint, effect, radius: range });
+  event.FireAllClients({
+    kind: "Cast",
+    origin,
+    position: endpoint,
+    direction: aim,
+    effect,
+    radius: range,
+    playerId: player.UserId,
+    combo: strike.combo,
+  });
   player.SetAttribute("LastCombatResult", `${effect}: ${hits} hits`);
   const tool = player.Character?.FindFirstChildOfClass("Tool");
   if (tool && !ability) {
@@ -559,8 +608,9 @@ request.OnServerEvent.Connect((player, raw: unknown) => {
   if (r.kind === "ChooseParent") {
     if (!s.data.parent && PARENTS.some((p) => p === r.parent)) {
       s.data.parent = r.parent as DivineParent;
+      beginQuest(s.data);
       equip(player, s.data.equipped);
-      message(player, `${r.parent} has claimed you. Accept your first quest!`);
+      message(player, `${r.parent} has claimed you. ${QUEST_TITLES[s.data.region]} begins.`);
     }
     return;
   }
@@ -613,6 +663,7 @@ request.OnServerEvent.Connect((player, raw: unknown) => {
       return;
     }
     s.data.region = r.region;
+    beginQuest(s.data);
     player.Character?.PivotTo(new CFrame(world.locations[r.region].spawn));
     message(player, `Welcome to ${REGIONS[r.region].name}.`);
   } else if (r.kind === "Return") {
@@ -656,6 +707,12 @@ function join(player: Player): void {
     if (canSave) persistence.save(player, data, true);
     return;
   }
+  if (data.parent) {
+    beginQuest(data);
+    // Older saves may already meet an objective that previously required a manual claim.
+    settleQuest(data);
+    settleQuest(data);
+  }
   states.set(player, {
     data,
     canSave,
@@ -664,11 +721,12 @@ function join(player: Player): void {
     mana: 60,
     attackAt: 0,
     abilityAt: 0,
-    requestAt: 0,
-    snapshotAt: -100,
+    requestTimes: new Map<string, number>(),
     potionAt: 0,
     saveAt: -100,
     returnAt: 0,
+    lastSavedAt: 0,
+    rhythm: { count: 0, lastAt: -100 },
     message: "Welcome to Eldoria. Choose your divine parent.",
   });
   player.CharacterAdded.Connect(() => task.defer(() => respawn(player)));
@@ -679,6 +737,7 @@ Players.GetPlayers().forEach((p) => task.spawn(() => join(p)));
 Players.PlayerRemoving.Connect((player) => {
   save(player, true);
   states.delete(player);
+  diagnostics.remove(player);
 });
 game.BindToClose(() => {
   let pending = states.size();
@@ -720,10 +779,22 @@ RunService.Heartbeat.Connect((dt) => {
             distance = d;
           }
         });
-        if (closest <= s.data.unlocked && closest !== s.data.region) s.data.region = closest;
+        if (closest <= s.data.unlocked && closest !== s.data.region) {
+          s.data.region = closest;
+          beginQuest(s.data);
+        }
         if (closest > s.data.unlocked) {
           p.Character?.PivotTo(new CFrame(world.locations[s.data.region].spawn));
           s.message = "That region is locked. Complete your current boss quest.";
+        }
+      }
+      if (position && s.data.parent && alive(p)) {
+        for (const landmark of world.locations[s.data.region].discoveries) {
+          if (position.sub(landmark.position).Magnitude <= 18 && discover(s.data, landmark.id)) {
+            s.mana = 60;
+            message(p, `Discovered ${landmark.name} • +40 XP, +12 coins, +1 potion`);
+            stats(p);
+          }
         }
       }
       sync(p);

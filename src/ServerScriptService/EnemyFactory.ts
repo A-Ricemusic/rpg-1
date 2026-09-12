@@ -167,6 +167,16 @@ export function createEnemy(
   };
   updateHealth();
   humanoid.HealthChanged.Connect(updateHealth);
+  humanoid.Died.Once(() => {
+    // Keep the defeated artwork briefly, but never let its invisible hitbox block combat.
+    for (const child of model.GetDescendants()) {
+      if (child.IsA("BasePart")) {
+        child.CanCollide = false;
+        child.CanQuery = false;
+        child.CanTouch = false;
+      }
+    }
+  });
   model.Parent = parent;
   CollectionService.AddTag(model, "Enemy");
 

@@ -1,3 +1,5 @@
+> UI/control update: see [ui-controls.md](ui-controls.md) for closed-by-default menus, crosshair aiming, input guards and camera respawn verification.
+
 # Demigod adventure: play and verification
 
 ## Play in Studio
@@ -102,3 +104,66 @@ All five isolated boss AI fixtures emitted their configured attacks and damaged 
 Final local checks: `bun run format`, `bun run typecheck`, `bun run lint`, and **28 passing Bun tests / 355 assertions**. Seven tests concern the legacy prototype; the others cover active campaign/economy, roster, targeting, navigation, save validation/lease transitions, return cancellation and the request race. Studio logs contained no gameplay script failures; CoreGui input warnings and the installed Atmos plugin message were unrelated.
 
 Final Studio inspection: Edit mode; authored world and all 2,398 asset descendants retained; no `DemigodRuntime`, `DemigodTestContent` or `DemigodVerification` left in Edit; gameplay lock released. Remaining verification gaps: real DataStore save/rejoin and multiplayer lease contention, a fresh complete expanded-map campaign clear, device ergonomics/performance, and saved-place reopen durability. No publishing, API setup, animation uploads, or authored-environment replacement was performed.
+
+## Continued audit — later regions and final victory
+
+This pass closes the fresh expanded-map campaign gap recorded above. It resumed the exact previously earned Poseidon profile at Ember (266 coins, 659 XP, trident +1, first region complete). All subsequent resources, equipment upgrades, enemy kills, boss flags and rewards were earned through normal mouse/keyboard/proximity actions. A temporary Studio-only checkpoint carried that earned profile between bounded sessions because the place is unpublished. Its StringValue and TypeScript load hook were removed, and a clean fresh-start test confirmed zero progress and parent selection afterward. This is not evidence of real DataStore save/load.
+
+Further corrections:
+
+- Rate limiting is per recognized action. Equip, attack, power and potion inputs can coexist in one frame; repeated requests retain limits and server combat cooldowns. Unknown request names cannot grow the throttle map. Attack/Ability button order is explicit.
+- Defeated enemies immediately lose collision, query and touch participation while their artwork remains until respawn. Invisible corpse hitboxes no longer block later attacks or movement.
+- Enemy melee and dash attacks require an unobstructed physical path. Dash rechecks the path when damage resolves. AI movement/floor queries use collidable surfaces instead of noncolliding decoration.
+- Save ownership is now per player connection. Rejoining the same server cannot inherit the leaving connection's token. Queued saves recheck whether the profile has already been released. Published-place service failure is distinguished from an unpublished place in the status text. Session-token regression tests pass; actual service/rejoin remains unverified.
+
+### Continuation sessions
+
+All timestamps UTC, September 12. Every session acquired its own filesystem lock, verified Place1 and the authored world, stopped Play, checked Edit mode and released ownership. All gaps exceeded thirty seconds.
+
+| Session                | Start    | Stop/release | Duration | Result                                                                                                                                                                                                              |
+| ---------------------- | -------- | ------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ember preparation      | 16:56:26 | 16:59:45     | 3m 19s   | Earned three gathers, bought supplies, upgraded trident to +3; stopped a stalled navigation run after death.                                                                                                        |
+| Ember completion       | 17:00:43 | 17:08:59     | 8m 16s   | Two enemy kills, quest reward, normal Pyre Tyrant defeat, boss reward and Frost unlock. Failed approaches/deaths retained earned progress.                                                                          |
+| Frost completion       | 17:09:53 | 17:15:13     | 5m 20s   | Gathered resources, bought supplies, upgraded to +4, killed two knights and the seer, defeated Frostveil Colossus, claimed reward and unlocked Storm.                                                               |
+| Storm and Umbral       | 17:16:26 | 17:24:20     | 7m 54s   | Travel, gathering, trading, +5 upgrade, enemy/quest rewards, Skybreaker and Null Sovereign defeats, final reward and visible victory. Both bosses took weapon and water-surge damage with concurrent potion inputs. |
+| Clean final regression | 17:25:56 | 17:26:48     | 52s      | No checkpoint/hook; fresh parent selection and zero progress. Actual simultaneous Q/H cast the power, consumed one potion and healed. Dash wall regression passed.                                                  |
+
+Final earned campaign state: `quests=[3,3,3,3,3]`, `bosses=[true,true,true,true,true]`, `victory=true`, region 4, level 13, 4,265 XP, 634 coins, trident +5. The GUI displayed **ELDORIA RESTORED** after the final normal quest claim. This later-region run complements the earlier fresh Elder Briar clear on the expanded map; it was not one uninterrupted session.
+
+Testing used 3× navigation and a temporary named camera-follow binding while attacking moving enemies. The binding was explicitly removed after encounters and disappeared on Stop. Early static-camera/stalled-navigation failures were not counted as passes. Player position, health, enemy health and quest state were checked rather than relying on input-tool Success messages.
+
+Targeted fixtures were separate from campaign progression. A wall prevented all melee damage (244 HP remained); removing it allowed damage. A wall introduced during a dash prevented its damage (100 HP remained); removing it allowed the next dash to reduce health to 87. Defeated live knights and a fixture enemy each had zero blocking/queryable/touchable parts. These fixtures changed positioning/health deliberately, granted no campaign rewards, and were removed.
+
+Final verification: formatting, typecheck, lint and **31 Bun tests / 469 assertions** passed, including seven legacy prototype tests. No gameplay script failures appeared in Studio logs. The installed Atmos plugin and CoreGui input-tool warnings remained unrelated. Edit mode retained the authored world and all 2,398 asset descendants, with no runtime/test folder, checkpoint or checkpoint hook. The gameplay lock was released.
+
+Remaining verification limits are real DataStore service/rejoin and multiplayer contention, touch/gamepad ergonomics and device performance, and authored-place save/reopen durability. The newly completed campaign does not establish those behaviors.
+
+## Gameplay feel pass — September 12, 2026
+
+UI/control ownership remains with `ui-controls-author`; see `ui-controls.md` for their independent UI verification. This gameplay pass adds:
+
+- Walk speed 22; sword 0.38s swings with a 1.6× third-hit finisher if swings stay within 1.35s. Changing weapons or pausing resets the combo. Trident hits at least 8 studs away deal 1.25× damage. Bow first/settled shots (1.1s pause) deal 1.3× damage; quick shots remain available at 0.6s.
+- First regional quest begins with parent selection; subsequent quests begin on arrival. Gathering/killing completes ready objectives automatically, including boss unlocks and victory. Old profiles with unclaimed completed objectives settle on load. The Oracle remains a quest-status interaction.
+- Fifteen authored `Discovery_<RegionId>_<1..3>` markers now award 40 XP, 12 coins, one potion and a power refill within 18 studs, once per profile. No authored geometry is replaced.
+- `CombatPresentation.client.ts` consumes server `Cast` and `Impact` events: segmented Zeus lightning, expanding Poseidon wave fronts, Hades rings/wisps, weapon trails, damage numbers and procedural shoulder poses. Hades heals 10 per enemy actually hit, capped at 30, rather than healing an empty cast. No uploaded animation IDs or new bitmap assets are required. The old UI `Effect` handler receives no new combat events.
+- Snapshot additions for UI integration: `questTitle`, `questBrief`, `discoveries`, `lastSaveAt`, `canPersist`. These are available to the UI, but this pass does not edit its layout.
+
+### Inspecting actual player data
+
+During Play, switch Studio Explorer to **Server** and open `ServerStorage > DemigodDiagnostics > <UserId>`. `ProfileJSON.Value` contains the current authoritative parent, inventory, coins, XP, upgrades, quest stages, boss flags and discoveries. `RecentEvents.Value` holds the last 20 gameplay/save messages. Folder attributes include Username, SaveStatus, CanPersist, Region, Coins, XP, UpdatedAt, PlaceId and GameId. This is an observation mirror, not an editing backdoor. It is removed on disconnect. SaveStatus remains `Session only: unpublished place` in Place1 (PlaceId 0); persistent save/reload is still unverified and unavailable here.
+
+### New verification and limitations
+
+Formatting, roblox-ts compilation/typecheck, lint and 35 Bun tests passed (511 assertions). New tests cover combo reset/timing, weapon spacing/settling, all five automatic quest transitions, and duplicate/locked discovery rejection.
+
+Two bounded Studio sessions (69s and 35s; more than 30s apart) verified normal parent buttons and Q/R/1–3 inputs, Poseidon plus sword killing an actual authored-world enemy, combo Cast reaching 3, a Zeus strike dealing 85 damage, effect instances being created, shoulder C0 returning exactly to its initial value, and discovery rewards at `Discovery_Verdant_1`. Server diagnostics showed the same earned profile and honest save availability. Movement/equipment were exercised; camera and target placement assistance were used for aimed combat. Sessions were stopped and Edit mode verified before lock release. No test content was added to Edit mode or gameplay source.
+
+These short checks do **not** establish that the game now feels polished or fun. UI screenshot capture remains unreliable per the UI handoff, and physical mouse/controller/touch feel still needs a person/device review. Full five-boss campaign evidence above predates this tuning pass; its automatic quest transitions are unit tested, not yet rerun end-to-end in Studio. Missing imported mesh content remains an art/import blocker documented in `ui-controls.md` and `assets/eldoria/import-ready/README.md`.
+
+### Playing this build
+
+Choose a parent. WASD/Space move and jump; right-drag/wheel orbit and zoom. Aim the center crosshair; Click or R attacks, Q casts, H drinks a potion, 1/2/3 select Sword/Trident/Bow. I opens inventory; J opens Journey; close menus before fighting. E interacts near resources, merchant or forge. Gather three resources and defeat two enemies; rewards automatically advance the objective to the boss. Defeat that boss, then travel onward from camp. Landmark detours grant supplies. Repeat through Umbral for final victory.
+
+Future custom animations should use the existing right-hand Tool grip; R15 `RightGripAttachment` and each model Handle grip must align. Optional weapon `TrailBase`/`TrailTip` attachments should sit at blade/shaft extremities, and bows should supply a `Muzzle` at the arrow rest. Suggested markers: Windup at 0s, Release/Hit at 0.09s, Recover at 0.30s. Current damage resolves immediately on accepted server input; uploaded animation timing must be explicitly integrated with server hit timing rather than moving authoritative damage into a client marker callback. Preserve 0.38/0.58/0.60s weapon cooldowns and 6s divine cooldown unless rebalance is intentional.
+
+A third 29-second session, after another >30-second gap, selected Hades through the normal button and used Q against an actual moss_brawler. With controlled setup health 50 and the player placed 15 studs from the foe, the target went 85→20 HP and the player 50→60 HP. The client created 81 effect instances. No game runtime errors appeared; console noise was the installed Atmos plugin and Studio VirtualInput/CoreGUI warnings. Play was stopped, Edit verified, and the owned lock removed. This session also confirms the final source revision starts successfully; the final Poseidon horizontal-cone targeting adjustment was compiled but was not separately re-exercised against a target.
