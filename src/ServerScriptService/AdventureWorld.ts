@@ -150,8 +150,8 @@ export class AdventureWorld {
     params.FilterType = Enum.RaycastFilterType.Include;
     params.FilterDescendantsInstances = [this.authored, Workspace.Terrain];
     const hit = Workspace.Raycast(
-      position.add(new Vector3(0, 100, 0)),
-      new Vector3(0, -300, 0),
+      position.add(new Vector3(0, 8, 0)),
+      new Vector3(0, -40, 0),
       params,
     );
     return hit?.Position ?? position;

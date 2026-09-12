@@ -1,38 +1,20 @@
-# rpg-game-1
+# Eldoria demigod RPG
 
-Roblox Studio project managed with Rojo.
+TypeScript, Roblox React function components, Bun, and Rojo.
 
-## Setup
+Use the existing authored Studio place and the existing Rojo server for this checkout. Run `bun run typecheck`, then press Play in Studio. Choose your divine parent and accept the first quest in the Journey panel.
 
-Install the dependencies and compile the TypeScript sources before starting the Rojo sync server:
+- **1/2/3** equip sword/trident/bow; **click/R** attack; **Q** divine power.
+- **E** interact; **H** potion; **J** quests/travel; **I** inventory/shop/forge.
+- Gather, defeat enemies, claim rewards, then defeat each boss to unlock five sequential regions and final victory.
 
-```sh
-bun install
-bun run build
-rojo serve default.project.json
-```
-
-In Roblox Studio, install/open the Rojo plugin and connect to:
-
-```text
-localhost:34872
-```
-
-If you use Aftman for tool management:
+[Full play instructions, verification and limitations](docs/handoffs/gameplay.md) · [World and asset handoff](docs/handoffs/world.md)
 
 ```sh
-aftman install
-bun install
-bun run build
-rojo serve default.project.json
+bun run format
+bun run typecheck
+bun run lint
+bun run test
 ```
 
-Use `bun run check` to verify formatting, types, lint rules, and tests before committing.
-
-## Project Layout
-
-- `src/ReplicatedStorage` shared modules and assets
-- `src/ServerScriptService` server-only scripts
-- `src/StarterPlayer/StarterPlayerScripts` client scripts
-- `src/StarterGui` UI instances and client UI scripts
-- `src/Workspace` workspace instances
+The unpublished Studio place uses session-only player progress. Preserve the authored place with Studio's Save to File before closing; Rojo preserves `EldoriaWorld` and `GameAssets` but does not save them to this checkout.

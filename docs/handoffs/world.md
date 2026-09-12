@@ -1,6 +1,6 @@
 # Eldoria world art handoff
 
-Authored in the connected **rpg-game-1** Studio Edit datamodel (Studio ID `148b14ba-d9a0-4505-acd4-f689e0fb6b80`, PlaceId `0`). Native Roblox instances exist in Studio. No gameplay scripts, runtime world builder, custom animation uploads, or API keys were added by the world artist. Original Baseplate, SpawnLocation, Terrain, camera, and global Lighting settings were preserved.
+Authored in the connected **Place1** (originally **rpg-game-1**) Studio Edit datamodel (Studio ID `148b14ba-d9a0-4505-acd4-f689e0fb6b80`, PlaceId `0`). Native Roblox instances exist in Studio. No gameplay scripts, runtime world builder, custom animation uploads, or API keys were added by the world artist. Original gameplay content was preserved. Baseplate is visually hidden with collision retained. Previous lighting values are in ServerStorage.LightingBeforeRefinedArt.
 
 ## Save status — action required
 
@@ -10,7 +10,7 @@ There is no save tool in the exposed MCP inventory. `game:SavePlace(Enum.SaveFil
 
 ## World and programmer contract
 
-All region roots are `Workspace.EldoriaWorld.<name>`. The level is a compact, furnished native-part environment, with a continuous west-to-east road. Distances use Roblox studs, Y is up, forward on rigs is -Z.
+All region roots are `Workspace.EldoriaWorld.<name>`. The level is a compact environment with Blender mesh scenery over native collision geometry, with a continuous west-to-east road. Distances use Roblox studs, Y is up, forward on rigs is -Z.
 
 | Region model          | RegionId  | Center X | Landmark / boss                                             |
 | --------------------- | --------- | -------: | ----------------------------------------------------------- |
@@ -55,9 +55,9 @@ A static equipment showcase is at `Workspace.EldoriaWorld.01_WhisperingWilds.Wea
 
 ### Equipment grip convention
 
-`Handle.GripAttachment` and `Handle.RightGripAttachment` are at the handle center with identity orientation. Local +Y follows the blade/shaft; local -Z is forward. Tools retain identity `Grip`. Sword spans about 5.1 studs including hilt; Trident about 7.4; Bow about 5; Arrow about 3. Body scale is approximately a six-stud reference humanoid.
+`Handle.GripAttachment` and `Handle.RightGripAttachment` are at the handle center with identity orientation. Local +Y follows the blade/shaft; local -Z is forward. Tools retain identity `Grip`. Sword spans about 5.6 studs including hilt; Trident about 7.7; Bow about 5.6; Arrow about 3.2. Body scale is approximately a six-stud reference humanoid.
 
-Sword/Trident/Arrow have `Handle.TipAttachment` at local Y=4.45/6.2/1.9 respectively. Bow has `Handle.ArrowNockAttachment` at the grip origin. For a projectile, orient the arrow's +Y along travel; the art's long axis is not -Z. Final combat and aiming offsets should be tuned by the gameplay engineer against their character/controller.
+Sword/Trident/Arrow have `Handle.TipAttachment` at local Y=4.65/6.05/1.8 respectively. Bow has `Handle.ArrowNockAttachment` at the grip origin. For a projectile, orient the arrow's +Y along travel; the art's long axis is not -Z. Final combat and aiming offsets should be tuned by the gameplay engineer against their character/controller.
 
 ### Rig joints and attachments
 
@@ -67,28 +67,40 @@ Base rest positions: root/torso Y=3, head Y=4.6, arm centers X=±1.5/Y=3, leg ce
 
 `Right Arm.RightGripAttachment` and `Left Arm.LeftGripAttachment` are local (0,-1,0); `Head.HatAttachment` is (0,0.6,0); `Torso.BodyBackAttachment` is (0,0,0.5); `HumanoidRootPart.RootAttachment` is at origin. Scale applies to attachments. PrimaryPart is HumanoidRootPart, with PivotOffset toward the feet, so `PivotTo` positions the rig at ground level. Unanchor its root and configure collision behavior when enabling live gameplay. Blender character sources contain editable artwork geometry; the actual animation joints are in Studio.
 
-## Blender and import evidence
+# Refined Blender artwork — completed transfer
 
-- `assets/eldoria/author.ts`: TypeScript offline art manifest authoring. Run with `bun assets/eldoria/author.ts`; this writes JSON only and does not touch Studio.
-- `manifest.json`, `templates.json`, `region-0.json` … `region-4.json`: declarative source geometry, colors, materials, attributes, clone references, scales.
-- `blender_source.py`: Blender-only source conversion, preserving Roblox stud scale and mapping (X,Y,Z) to Blender (X,-Z,Y).
-- `Sword-pilot.blend`, `Sword-pilot.obj`, `Sword-pilot.mtl`: **one local import pilot**, exported successfully by Blender.
-- `Eldoria-art-sources.blend`: editable collections for all templates and five regions, including placed art copies.
+31 Blender asset models, 84 source MeshParts and 103,010 source triangles exist in Studio under `ReplicatedStorage.GameAssets.RefinedArt`. Copies furnish all five regions and skin the functional weapon, item and character templates. Counts exclude repeated world copies.
 
-**No Blender mesh was imported into Studio.** The exposed tools provide asset-ID insertion and AI generation, but no local-file 3D importer. In MCP's execution context `AssetImportService` was unavailable (returned nil) and no plugin object was exposed. Studio's authenticated local importer could not be operated through these tools. Therefore a successful local-model import could not be proven, and no large mesh-export batch was produced. The one Sword OBJ remains ready for manual **File → Import** later. Every current Studio asset is the native Roblox-part version, with no external mesh asset dependency. [Roblox importer documentation](https://github.com/Roblox/creator-docs/blob/main/content/en-us/studio/importer.md).
+The Moonblade pilot was transferred and inspected before the larger batch. The tools could not operate Studio's local-file importer, so Blender vertices, split normals, UVs and triangles were transferred through EditableMesh and CreateMeshPartAsync. This is actual Blender geometry, not a Part approximation or a claim that FBX files were imported. No API key was used.
 
-The Blender mirror is an artwork source, not a native Roblox rig or a saved place. SurfaceGui text, lights, joints, tags, and collision metadata are authored in Studio/JSON and are not reproduced as functional Roblox components in Blender.
+## Sources and evidence
 
-## Validation and coordination
+- `Moonblade-pilot.blend`, `Eldoria-refined-library.blend`: editable sources and 31 corresponding FBX exports.
+- `blender_art.py`, `environment_art.py`: curved quillons, wrapped grips, gem settings, branching trees with individual leaves, masonry arches, columns, sculpted crags, pavilions, armor and boss crowns.
+- `Surface-bakes.blend`, `bake-surfaces.py`, `textures/`: Blender color, normal and roughness bakes for sandstone, bark, basalt and mesa rock.
+- `meshes/`, `transfer/`, `prepare-transfer.ts`, `studio-transfer.ts`: geometry and bounded edit-time transfer payloads.
+- `prepare-textures.ts`, `texture-transfer/`: baked-image transfer data.
+- `studio-adopt.ts`, `studio-place.ts`: edit-time assembly helpers outside Rojo gameplay directories. Never install these as runtime scripts.
+- `Studio-sanctuary.png`, `Studio-temple.png`: actual final Studio captures. Other preview PNGs are Blender renders.
 
-Studio screenshots inspected the starting region and all four additional regions. Corrections included baseplate z-fighting, scaled rig grounding, sign orientation, exposed lava surfaces, and mesa cap placement. Initial Studio validation sampled 648 positions along the complete main road and all camp/boss branches: no missing floors or collidable obstructions in a 4-stud-wide, 5-stud-high clearance box. All four Tools passed handle/grip/anchoring/collision checks, and all 28 character templates had six Motor6Ds and a PrimaryPart. No LuaSourceContainers were added under EldoriaWorld.
+RefinedArt names: Sword, Trident, Bow, Arrow, MoonGate, ElderOak, FernCluster, WayShrine, RuinedColumn, VolcanicCrag, GlacialCrag, MesaCrag, UnderworldCrag, StormObelisk, MerchantPavilion, HealingPotion, Crystal, Ore, Wood, Coin, Herb, ArmorTorso, ArmorArm, ArmorLeg, ArmorHead, CivilianHead, BriarCrown, PyreCrown, FrostCrown, StormCrown, VoidCrown.
 
-These are Edit-mode geometry checks, not a live combat or player-controller playtest. Global Lighting remains unchanged; authored PointLights and emissive elements distinguish regions. Lava/soul-water details are visual art without damage scripts. Geometry is deliberately compact and uses native parts rather than imported meshes.
+Each region's `RefinedLandscape` contains entrance and sanctum MoonGates, a ridge and ground rocks. Forest adds groves and ferns; Ember and Frost have towering sanctum crags; Storm has twin lightning conductors; Umbral has the SovereignReliquary. Boss crowns distinguish branching antlers, ram horns/flames, an ice fan, winged solar halo and broken void halo. NPCs use human faces and fabric clothing; enemies use armored mesh skins. Replacement artwork carries ArtVersion 2; original region root attributes retain version 1.
 
-The filesystem lock `.agent-studio-lock` was used for bounded Studio operations and released afterward. One early capability check accidentally made two read-only calls after a failed lock acquisition; no mutation occurred, and all subsequent Studio calls were gated on successful acquisition. Other agents' locks were never removed. Gameplay engineer files appearing during this work were left to their owner.
+Original visual Parts are hidden as needed, retaining structural collision proxies and marker positions. `ServerStorage.WorldArtArchive_v1` preserves pre-replacement art with discovery tags removed. `ServerStorage.RefinedPrototypeArchive` holds superseded prototypes. The underlying layout remains compact and mostly level; this pass improves artwork rather than creating a fully sculpted open landscape.
 
-### Final validation results
+## Texture and persistence limitations
 
-After enabling solid collision on 357 structural scenery pieces, a temple pillar intruded into the boss approach. It was moved 15 studs east, and all **648 route-clearance samples passed again with zero obstructions**. The storm overlook was sampled at 39 positions; maximum floor-height change was 0.483 studs over a two-stud interval. Final counts: **1,943 world BaseParts**, **3,053 world descendants**, **1,153 template descendants**, **67 tagged markers**. The overlook is reached by an approximately 5.71-degree ramp. Reusable character templates and decorative placed art are excluded from physical route obstructions.
+Authenticated image upload returned IDs in `published-textures.json`, but those IDs failed preload. Visible materials instead use locally transferred EditableImages: 256-pixel color/normal maps and constant roughness, retained in `GameAssets.SurfaceTemplates` and `CompiledBlenderSurfaces`. Mesh TextureContent and SurfaceAppearance reference these images. Original bakes are 512 pixels. Final Studio captures confirm bark and stone colors render.
 
-`bun run format`, `bun run typecheck`, and `bun run lint` all completed successfully. No gameplay implementation was authored or changed by this art task; concurrent gameplay changes in the shared repository remain with the gameplay engineer.
+MeshContent references live EditableMesh objects. CreateAssetAsync failed with “CreateAssetAsync and CreateAssetVersionAsync are not available yet.” **Saving and reopening these object-backed meshes/images has not been verified.** Save through Studio and verify a reopened copy before treating it as durable. Blender, FBX, geometry JSON and image sources are durable backups. No verified .rbxl file has been produced; manual Save As is required.
+
+## Validation
+
+All five regions were inspected in Studio. Edit-mode validation passed 648 route-clearance samples with no missing floors or collidable obstructions. Four weapons passed unanchored/noncolliding assembly checks; all 28 character templates retained six Motor6Ds and a PrimaryPart. There are 67 tagged markers. Storm overlook passed 39 floor samples, maximum rise 0.483 studs per two-stud interval. Four final sanctuary trees are noncolliding.
+
+These checks do not establish live controller/combat behavior, mobile performance or persistent publishing. Repeated detailed foliage needs profiling on target devices. Lighting now uses late-afternoon sun, restrained bloom and regional emissive lights. No gameplay scripts were authored or changed.
+
+The exclusive filesystem lock was acquired for bounded Studio operations, with place/edit-state checks, and released afterward. Other agents' locks were never removed. One early read-only capability check ran after a failed acquisition; no mutation occurred and subsequent calls were gated correctly. Concurrent gameplay changes remain owned by the gameplay engineer.
+
+Final repository checks: `bun run format`, `bun run typecheck`, and `bun run lint` completed successfully after the refined art pass.

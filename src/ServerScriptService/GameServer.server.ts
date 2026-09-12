@@ -1,3 +1,4 @@
+import { inMeleeArc } from "shared/CombatTargeting";
 import { Players, ReplicatedStorage, RunService, Workspace } from "@rbxts/services";
 import {
   AdventureRequest,
@@ -380,13 +381,14 @@ REGIONS.forEach((region, index) => {
     spawn();
   }
 });
-function damage(player: Player, enemy: Model, amount: number): void {
+function damage(player: Player, enemy: Model, amount: number): boolean {
   const s = states.get(player);
   const h = enemy.FindFirstChildOfClass("Humanoid");
-  if (!s || !h || h.Health <= 0 || enemy.GetAttribute("AdventureRegion") !== s.data.region) return;
+  if (!s || !h || h.Health <= 0 || enemy.GetAttribute("AdventureRegion") !== s.data.region)
+    return false;
   if (enemy.GetAttribute("Boss") === true && s.data.quests[s.data.region] < 2) {
     message(player, "Complete the gathering and enemy quest before challenging the boss.");
-    return;
+    return false;
   }
   h.TakeDamage(amount);
   if (h.Health <= 0) {
@@ -402,6 +404,7 @@ function damage(player: Player, enemy: Model, amount: number): void {
       boss ? "Boss defeated! Claim your quest reward." : "+18 coins • Enemy defeated!",
     );
   }
+  return true;
 }
 function combat(player: Player, direction: Vector3, ability: boolean): void {
   const s = states.get(player);
@@ -428,6 +431,8 @@ function combat(player: Player, direction: Vector3, ability: boolean): void {
     : weapon.range;
   let endpoint = origin.add(aim.mul(range));
   let hits = 0;
+  let rejected = false;
+  const previousMessage = s.message;
   const ray = Workspace.Raycast(origin, aim.mul(range), params);
   if (ray) endpoint = ray.Position;
   const power =
@@ -442,24 +447,39 @@ function combat(player: Player, direction: Vector3, ability: boolean): void {
     if (!target || (enemy.FindFirstChildOfClass("Humanoid")?.Health ?? 0) <= 0) continue;
     const delta = target.Position.sub(origin);
     if (delta.Magnitude > range + target.Size.Magnitude / 2) continue;
+    const ranged = (!ability && s.data.equipped === "Bow") || (ability && s.data.parent === "Zeus");
     let hit = false;
-    if ((!ability && s.data.equipped === "Bow") || (ability && s.data.parent === "Zeus"))
+    if (ranged) {
+      // The first ray already establishes both the body hit and its clear line of sight.
       hit = ray !== undefined && ray.Instance.IsDescendantOf(enemy);
-    else
-      hit =
-        (ability && s.data.parent === "Hades") ||
-        delta.Magnitude < 3 ||
-        aim.Dot(delta.Unit) > (ability ? 0.35 : 0.15);
+    } else if (!ability) {
+      const horizontal = new Vector3(aim.X, 0, aim.Z);
+      const facing = horizontal.Magnitude > 0.1 ? horizontal : p.CFrame.LookVector;
+      hit = inMeleeArc(facing.X, facing.Z, delta.X, delta.Z);
+    } else {
+      hit = s.data.parent === "Hades" || delta.Magnitude < 3 || aim.Dot(delta.Unit) > 0.35;
+    }
     if (!hit) continue;
-    const sight = Workspace.Raycast(origin, delta, params);
-    if (sight && !sight.Instance.IsDescendantOf(enemy)) continue;
-    damage(player, enemy, power);
+    if (!ranged) {
+      const sight = Workspace.Raycast(origin, delta, params);
+      if (sight && !sight.Instance.IsDescendantOf(enemy)) continue;
+    }
+    if (!damage(player, enemy, power)) {
+      rejected = true;
+      continue;
+    }
     hits++;
     if (ability && s.data.parent === "Poseidon") enemy.SetAttribute("StunnedUntil", now + 2);
   }
   if (ability && s.data.parent === "Hades") {
     const h = player.Character?.FindFirstChildOfClass("Humanoid");
     if (h) h.Health = math.min(h.MaxHealth, h.Health + 15);
+  }
+  if (!rejected && s.message === previousMessage) {
+    s.message =
+      hits > 0
+        ? `Hit ${hits} target(s) • ${power} damage`
+        : "No target hit. Move closer for melee; aim at an enemy with Click/R or center the view for the Attack button.";
   }
   const effect = ability ? s.data.parent : s.data.equipped;
   event.FireAllClients({ kind: "Effect", origin, position: endpoint, effect, radius: range });

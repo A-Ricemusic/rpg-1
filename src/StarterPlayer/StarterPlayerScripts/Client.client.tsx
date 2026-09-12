@@ -26,14 +26,21 @@ const event = remotes.WaitForChild("Event") as RemoteEvent;
 function send(r: AdventureRequest): void {
   request.FireServer(r);
 }
-function aim(kind: "Attack" | "Ability"): void {
+function aim(kind: "Attack" | "Ability", fromButton = false): void {
   const camera = Workspace.CurrentCamera;
-  if (!camera) return;
   const root = player.Character?.FindFirstChild("HumanoidRootPart");
-  if (!root?.IsA("BasePart")) return;
-  const mouse = player.GetMouse();
-  const delta = mouse.Hit.Position.sub(root.Position.add(new Vector3(0, 1, 0)));
-  send({ kind, direction: delta.Magnitude > 0.1 ? delta.Unit : camera.CFrame.LookVector });
+  if (!camera || !root?.IsA("BasePart")) return;
+  // UI actions aim through the center of the view, never through their own screen location.
+  const ray = fromButton
+    ? camera.ViewportPointToRay(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 2)
+    : player.GetMouse().UnitRay;
+  const params = new RaycastParams();
+  params.FilterType = Enum.RaycastFilterType.Exclude;
+  params.FilterDescendantsInstances = player.Character ? [player.Character] : [];
+  const hit = Workspace.Raycast(ray.Origin, ray.Direction.mul(500), params);
+  const point = hit?.Position ?? ray.Origin.add(ray.Direction.mul(500));
+  const delta = point.sub(root.Position.add(new Vector3(0, 1, 0)));
+  send({ kind, direction: delta.Magnitude > 0.1 ? delta.Unit : root.CFrame.LookVector });
 }
 const gold = Color3.fromRGB(240, 205, 126);
 const ink = Color3.fromRGB(16, 23, 34);
@@ -124,6 +131,17 @@ function App(): React.Element {
     );
   return (
     <>
+      <textlabel
+        key="AimReticle"
+        AnchorPoint={new Vector2(0.5, 0.5)}
+        Position={UDim2.fromScale(0.5, 0.5)}
+        Size={UDim2.fromOffset(20, 20)}
+        BackgroundTransparency={1}
+        Text="+"
+        TextSize={22}
+        TextColor3={Color3.fromRGB(255, 255, 255)}
+        TextStrokeTransparency={0.3}
+      />
       <frame
         key="Status"
         Position={UDim2.fromOffset(16, 48)}
@@ -318,13 +336,13 @@ function App(): React.Element {
         <uilistlayout Padding={new UDim(0, 4)} />
         <Button
           name="Attack"
-          text="Attack [Click / R] • Aim with cursor"
-          action={() => aim("Attack")}
+          text="Attack [Click / R] • Button aims center"
+          action={() => aim("Attack", true)}
         />
         <Button
           name="Ability"
           text={`${s.parent === "Poseidon" ? "Water surge" : s.parent === "Zeus" ? "Lightning strike" : "Shadow burst"} [Q] • 20 power`}
-          action={() => aim("Ability")}
+          action={() => aim("Ability", true)}
         />
       </frame>
       <textlabel

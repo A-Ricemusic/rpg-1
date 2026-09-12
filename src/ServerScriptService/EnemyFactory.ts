@@ -1,40 +1,6 @@
-import { CollectionService, Workspace } from "@rbxts/services";
+import { CollectionService } from "@rbxts/services";
 import { cloneVisual } from "./AdventureWorld";
-import { ALL_ENEMIES, EnemyDefinition, RegionId } from "shared/EnemyConfig";
-
-interface EnemyRegion {
-  readonly id: RegionId;
-  readonly center: Vector3;
-}
-
-const REGIONS: readonly EnemyRegion[] = [
-  { id: "Verdant", center: new Vector3(0, 0, 0) },
-  { id: "Ember", center: new Vector3(300, 0, 0) },
-  { id: "Frost", center: new Vector3(-300, 0, 0) },
-  { id: "Storm", center: new Vector3(0, 0, 300) },
-  { id: "Umbral", center: new Vector3(0, 0, -300) },
-];
-
-const AUTHORED_REGION_NAMES = new Map<RegionId, string>([
-  ["Verdant", "01_WhisperingWilds"],
-  ["Ember", "04_EmberfallCaldera"],
-  ["Frost", "03_FrostveilReach"],
-  ["Storm", "08_ZephyrMesa"],
-  ["Umbral", "10_UmbralHollow"],
-]);
-
-function resolveRegions(): [readonly EnemyRegion[], boolean] {
-  const authored = Workspace.FindFirstChild("EldoriaWorld");
-  if (!authored) return [REGIONS, false];
-  const resolved = new Array<EnemyRegion>();
-  for (const style of REGIONS) {
-    const model = authored.FindFirstChild(AUTHORED_REGION_NAMES.get(style.id) ?? "");
-    if (!model?.IsA("Model")) return [REGIONS, false];
-    const [bounds] = model.GetBoundingBox();
-    resolved.push({ ...style, center: new Vector3(bounds.Position.X, 0, bounds.Position.Z) });
-  }
-  return [resolved, true];
-}
+import { EnemyDefinition } from "shared/EnemyConfig";
 
 function rgb(value: readonly [number, number, number]): Color3 {
   return Color3.fromRGB(value[0], value[1], value[2]);
@@ -210,30 +176,4 @@ export function createEnemy(
   glow.Range = definition.boss ? 28 : 12;
   glow.Parent = root;
   return model;
-}
-
-export function spawnEnemies(): void {
-  if (Workspace.FindFirstChild("RPGEnemies")) return;
-  const enemies = new Instance("Folder");
-  enemies.Name = "RPGEnemies";
-  enemies.Parent = Workspace;
-
-  const [activeRegions, usesAuthoredWorld] = resolveRegions();
-  const placementScale = usesAuthoredWorld ? 9 : 1;
-
-  const offsets = [
-    new Vector3(-58, 0, -35),
-    new Vector3(58, 0, -35),
-    new Vector3(-58, 0, 35),
-    new Vector3(58, 0, 35),
-  ];
-  activeRegions.forEach((region) => {
-    const roster = ALL_ENEMIES.filter((definition) => definition.region === region.id);
-    roster.forEach((definition, index) => {
-      const position = definition.boss
-        ? region.center.add(new Vector3(0, 0, 82 * placementScale))
-        : region.center.add(offsets[index].mul(placementScale));
-      createEnemy(definition, position, enemies);
-    });
-  });
 }
