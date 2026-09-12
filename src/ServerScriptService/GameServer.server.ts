@@ -23,7 +23,7 @@ import {
 import { ClientRequest, PlayerProgress, PlayerSnapshot, ServerEvent } from "shared/GameTypes";
 import { createProgress, grantXp } from "shared/Progression";
 import { completeQuestTarget, setQuestActive } from "shared/QuestProgression";
-import { buildDemoWorld } from "./QuestWorldFactory";
+import { spawnEnemies } from "./EnemyFactory";
 import { startEnemySystem } from "./EnemyService";
 
 interface RuntimeState {
@@ -376,7 +376,7 @@ task.spawn(() => {
   }
 });
 
-buildDemoWorld();
+spawnEnemies();
 CollectionService.GetTagged("QuestCollectible").forEach(connectCollectible);
 CollectionService.GetInstanceAddedSignal("QuestCollectible").Connect(connectCollectible);
 CollectionService.GetTagged("Enemy").forEach(connectEnemy);

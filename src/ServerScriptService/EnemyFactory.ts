@@ -1,57 +1,17 @@
 import { CollectionService, Workspace } from "@rbxts/services";
 import { ALL_ENEMIES, EnemyDefinition, RegionId } from "shared/EnemyConfig";
-import { QUESTS } from "shared/GameConfig";
 
-interface RegionStyle {
+interface EnemyRegion {
   readonly id: RegionId;
-  readonly name: string;
   readonly center: Vector3;
-  readonly ground: Color3;
-  readonly accent: Color3;
-  readonly material: Enum.Material;
 }
 
-const REGIONS: readonly RegionStyle[] = [
-  {
-    id: "Verdant",
-    name: "Verdant Reach",
-    center: new Vector3(0, 0, 0),
-    ground: Color3.fromRGB(61, 105, 66),
-    accent: Color3.fromRGB(137, 218, 102),
-    material: Enum.Material.Grass,
-  },
-  {
-    id: "Ember",
-    name: "Ember Wastes",
-    center: new Vector3(300, 0, 0),
-    ground: Color3.fromRGB(93, 53, 43),
-    accent: Color3.fromRGB(255, 109, 45),
-    material: Enum.Material.Basalt,
-  },
-  {
-    id: "Frost",
-    name: "Frostveil Shelf",
-    center: new Vector3(-300, 0, 0),
-    ground: Color3.fromRGB(159, 198, 211),
-    accent: Color3.fromRGB(213, 249, 255),
-    material: Enum.Material.Snow,
-  },
-  {
-    id: "Storm",
-    name: "Tempest Heights",
-    center: new Vector3(0, 0, 300),
-    ground: Color3.fromRGB(70, 83, 118),
-    accent: Color3.fromRGB(118, 221, 255),
-    material: Enum.Material.Slate,
-  },
-  {
-    id: "Umbral",
-    name: "Umbral Hollow",
-    center: new Vector3(0, 0, -300),
-    ground: Color3.fromRGB(45, 38, 60),
-    accent: Color3.fromRGB(216, 79, 198),
-    material: Enum.Material.Rock,
-  },
+const REGIONS: readonly EnemyRegion[] = [
+  { id: "Verdant", center: new Vector3(0, 0, 0) },
+  { id: "Ember", center: new Vector3(300, 0, 0) },
+  { id: "Frost", center: new Vector3(-300, 0, 0) },
+  { id: "Storm", center: new Vector3(0, 0, 300) },
+  { id: "Umbral", center: new Vector3(0, 0, -300) },
 ];
 
 const AUTHORED_REGION_NAMES = new Map<RegionId, string>([
@@ -62,10 +22,10 @@ const AUTHORED_REGION_NAMES = new Map<RegionId, string>([
   ["Umbral", "10_UmbralHollow"],
 ]);
 
-function resolveRegions(): [readonly RegionStyle[], boolean] {
+function resolveRegions(): [readonly EnemyRegion[], boolean] {
   const authored = Workspace.FindFirstChild("EldoriaWorld");
   if (!authored) return [REGIONS, false];
-  const resolved = new Array<RegionStyle>();
+  const resolved = new Array<EnemyRegion>();
   for (const style of REGIONS) {
     const model = authored.FindFirstChild(AUTHORED_REGION_NAMES.get(style.id) ?? "");
     if (!model?.IsA("Model")) return [REGIONS, false];
@@ -220,117 +180,14 @@ function createEnemy(definition: EnemyDefinition, position: Vector3, parent: Ins
   return model;
 }
 
-function createRegion(style: RegionStyle, parent: Instance): Folder {
-  const folder = new Instance("Folder");
-  folder.Name = style.id;
-  folder.Parent = parent;
-  const ground = part(
-    `${style.id}Ground`,
-    new Vector3(220, 2, 220),
-    style.center.sub(new Vector3(0, 1, 0)),
-    style.ground,
-    folder,
-    style.material,
-  );
-  ground.CanCollide = true;
-  const beacon = part(
-    "RegionBeacon",
-    new Vector3(5, 16, 5),
-    style.center.add(new Vector3(0, 8, 0)),
-    style.accent,
-    folder,
-    Enum.Material.Neon,
-  );
-  const label = new Instance("BillboardGui");
-  label.Size = UDim2.fromOffset(260, 55);
-  label.StudsOffset = new Vector3(0, 11, 0);
-  label.AlwaysOnTop = true;
-  label.MaxDistance = 250;
-  label.Parent = beacon;
-  const text = new Instance("TextLabel");
-  text.Size = UDim2.fromScale(1, 1);
-  text.BackgroundTransparency = 1;
-  text.Text = style.name;
-  text.TextColor3 = style.accent;
-  text.TextStrokeTransparency = 0.2;
-  text.Font = Enum.Font.GothamBold;
-  text.TextSize = 25;
-  text.Parent = label;
-  for (let index = 0; index < 10; index++) {
-    const angle = (index / 10) * math.pi * 2;
-    const pillar = part(
-      "BoundaryPillar",
-      new Vector3(2.5, 8 + (index % 3) * 2, 2.5),
-      style.center.add(new Vector3(math.cos(angle) * 96, 4, math.sin(angle) * 96)),
-      style.accent,
-      folder,
-      Enum.Material.Neon,
-    );
-    pillar.Transparency = 0.25;
-  }
-  return folder;
-}
-
-export function buildDemoWorld(): void {
-  if (Workspace.FindFirstChild("RPGWorld")) return;
-  const root = new Instance("Folder");
-  root.Name = "RPGWorld";
-  root.Parent = Workspace;
-  const regions = new Instance("Folder");
-  regions.Name = "Regions";
-  regions.Parent = root;
+export function spawnEnemies(): void {
+  if (Workspace.FindFirstChild("RPGEnemies")) return;
   const enemies = new Instance("Folder");
-  enemies.Name = "Enemies";
-  enemies.Parent = root;
+  enemies.Name = "RPGEnemies";
+  enemies.Parent = Workspace;
 
   const [activeRegions, usesAuthoredWorld] = resolveRegions();
-  root.SetAttribute("UsesAuthoredWorld", usesAuthoredWorld);
-
-  if (!usesAuthoredWorld) {
-    activeRegions.forEach((style) => createRegion(style, regions));
-    for (let index = 1; index < activeRegions.size(); index++) {
-      const style = activeRegions[index];
-      const midpoint = style.center.div(2);
-      const length = style.center.Magnitude - 105;
-      const road = part(
-        `${style.id}Causeway`,
-        new Vector3(24, 1, length),
-        midpoint,
-        Color3.fromRGB(87, 91, 96),
-        root,
-        Enum.Material.Pavement,
-      );
-      road.CFrame = CFrame.lookAt(midpoint, style.center);
-    }
-  }
-
   const placementScale = usesAuthoredWorld ? 9 : 1;
-
-  QUESTS.forEach((quest, index) => {
-    const region = activeRegions[math.floor(index / 2)];
-    const localIndex = index % 2;
-    const position = region.center.add(
-      new Vector3(localIndex === 0 ? -72 : 72, 3 / placementScale, localIndex === 0 ? 54 : -54).mul(
-        placementScale,
-      ),
-    );
-    const item = part(
-      `QuestItem_${index + 1}`,
-      new Vector3(3, 3, 3),
-      position,
-      region.accent,
-      root,
-      Enum.Material.Neon,
-    );
-    item.Shape = Enum.PartType.Ball;
-    item.SetAttribute("QuestTargetId", quest.targetId);
-    item.SetAttribute("QuestIndex", index);
-    CollectionService.AddTag(item, "QuestCollectible");
-    const light = new Instance("PointLight");
-    light.Color = region.accent;
-    light.Range = 14;
-    light.Parent = item;
-  });
 
   const offsets = [
     new Vector3(-58, 0, -35),
