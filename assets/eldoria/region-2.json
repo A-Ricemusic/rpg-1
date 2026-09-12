@@ -1,0 +1,887 @@
+{
+  "name": "03_FrostveilReach",
+  "kind": "Model",
+  "children": [
+    {
+      "name": "Landmass",
+      "size": [340, 20, 280],
+      "pos": [720, -9.88, 0],
+      "color": [199, 222, 233],
+      "material": "Snow"
+    },
+    {
+      "name": "PilgrimRoad",
+      "size": [340, 0.3, 18],
+      "pos": [720, 0.15, 0],
+      "color": [165, 151, 124],
+      "material": "Cobblestone",
+      "attrs": { "RouteId": "Frost_Main", "Walkable": true }
+    },
+    {
+      "name": "SanctumApproach",
+      "size": [18, 0.3, 90],
+      "pos": [785, 0.15, 45],
+      "color": [165, 151, 124],
+      "material": "Cobblestone"
+    },
+    {
+      "name": "CampApproach",
+      "size": [18, 0.3, 75],
+      "pos": [635, 0.15, -37],
+      "color": [165, 151, 124],
+      "material": "Cobblestone"
+    },
+    {
+      "name": "Entrance",
+      "size": [2, 0.2, 2],
+      "pos": [555, 1, 0],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Entrance", "RegionId": "Frost", "RouteOrder": 3 }
+    },
+    {
+      "name": "Exit",
+      "size": [2, 0.2, 2],
+      "pos": [885, 1, 0],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Exit", "RegionId": "Frost", "NextRegion": "Storm" }
+    },
+    { "name": "EntryColumn-1", "clone": "Scenery.TempleColumn", "pos": [568, 0, -14], "scale": 1 },
+    {
+      "name": "EntryAccent-1",
+      "size": [2, 9, 0.4],
+      "pos": [568, 8, -15.3],
+      "color": [136, 231, 255],
+      "material": "Neon",
+      "light": 18,
+      "collide": false
+    },
+    { "name": "EntryColumn1", "clone": "Scenery.TempleColumn", "pos": [568, 0, 14], "scale": 1 },
+    {
+      "name": "EntryAccent1",
+      "size": [2, 9, 0.4],
+      "pos": [568, 8, 12.7],
+      "color": [136, 231, 255],
+      "material": "Neon",
+      "light": 18,
+      "collide": false
+    },
+    {
+      "name": "EntranceLintel",
+      "size": [6, 3, 34],
+      "pos": [568, 16, 0],
+      "color": [199, 222, 233],
+      "material": "Snow"
+    },
+    {
+      "name": "RegionSign",
+      "size": [18, 5, 1],
+      "pos": [571, 12, 0],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "text": "FROSTVEIL REACH",
+      "collide": false,
+      "rot": [0, 90, 0]
+    },
+    {
+      "name": "CampSquare",
+      "size": [65, 0.4, 48],
+      "pos": [635, 0.2, -64],
+      "color": [129, 120, 102],
+      "material": "Cobblestone"
+    },
+    { "name": "MerchantStall", "clone": "Scenery.MarketStall", "pos": [615, 0, -75], "scale": 1 },
+    { "name": "Merchant", "clone": "Characters.Merchant", "pos": [615, 0, -71], "scale": 1 },
+    {
+      "name": "MerchantLocation",
+      "size": [2, 0.2, 2],
+      "pos": [615, 1, -66],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Merchant", "RegionId": "Frost" }
+    },
+    { "name": "OraclePavilion", "clone": "Scenery.MarketStall", "pos": [653, 0, -75], "scale": 1 },
+    { "name": "QuestGiver", "clone": "Characters.QuestGiver", "pos": [653, 0, -71], "scale": 1 },
+    {
+      "name": "QuestGiverLocation",
+      "size": [2, 0.2, 2],
+      "pos": [653, 1, -66],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "QuestGiver", "RegionId": "Frost" }
+    },
+    {
+      "name": "ShopDisplayHealingPotion",
+      "clone": "Items.HealingPotion",
+      "pos": [612, 3.5, -75],
+      "scale": 1
+    },
+    { "name": "ShopDisplayCoin", "clone": "Items.Coin", "pos": [615, 3.5, -75], "scale": 1 },
+    { "name": "ShopDisplayCrystal", "clone": "Items.Crystal", "pos": [618, 3.5, -75], "scale": 1 },
+    {
+      "name": "CampNotice",
+      "size": [12, 4, 0.5],
+      "pos": [635, 4, -88],
+      "color": [91, 61, 42],
+      "material": "Wood",
+      "text": "SANCTUARY • SUPPLIES"
+    },
+    {
+      "name": "Bench-1",
+      "size": [9, 1, 2],
+      "pos": [619, 1, -50],
+      "color": [91, 61, 42],
+      "material": "WoodPlanks"
+    },
+    {
+      "name": "Bench1",
+      "size": [9, 1, 2],
+      "pos": [651, 1, -50],
+      "color": [91, 61, 42],
+      "material": "WoodPlanks"
+    },
+    { "name": "RoadLantern0", "clone": "Scenery.WayLantern", "pos": [590, 0, -13], "scale": 1 },
+    { "name": "RoadLantern1", "clone": "Scenery.WayLantern", "pos": [628, 0, 13], "scale": 1 },
+    { "name": "RoadLantern2", "clone": "Scenery.WayLantern", "pos": [666, 0, -13], "scale": 1 },
+    { "name": "RoadLantern3", "clone": "Scenery.WayLantern", "pos": [704, 0, 13], "scale": 1 },
+    { "name": "RoadLantern4", "clone": "Scenery.WayLantern", "pos": [742, 0, -13], "scale": 1 },
+    { "name": "RoadLantern5", "clone": "Scenery.WayLantern", "pos": [780, 0, 13], "scale": 1 },
+    { "name": "RoadLantern6", "clone": "Scenery.WayLantern", "pos": [818, 0, -13], "scale": 1 },
+    { "name": "RoadLantern7", "clone": "Scenery.WayLantern", "pos": [856, 0, 13], "scale": 1 },
+    {
+      "name": "BossArena",
+      "size": [82, 0.5, 72],
+      "pos": [785, 0.25, 91],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "attrs": { "MarkerType": "BossArena", "RegionId": "Frost" }
+    },
+    {
+      "name": "BossSpawn",
+      "size": [2, 0.2, 2],
+      "pos": [785, 1, 91],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "BossSpawn", "RegionId": "Frost", "EnemyId": "frost_colossus" }
+    },
+    {
+      "name": "BossArtwork",
+      "clone": "Characters.frost_colossus",
+      "pos": [785, 0.5, 105],
+      "scale": 1
+    },
+    { "name": "ArenaColumn0", "clone": "Scenery.TempleColumn", "pos": [828, 0, 91], "scale": 0.7 },
+    {
+      "name": "ArenaColumn1",
+      "clone": "Scenery.TempleColumn",
+      "pos": [815.4055915910216, 0, 115.74873734152916],
+      "scale": 0.7
+    },
+    { "name": "ArenaColumn2", "clone": "Scenery.TempleColumn", "pos": [785, 0, 126], "scale": 0.7 },
+    {
+      "name": "ArenaColumn3",
+      "clone": "Scenery.TempleColumn",
+      "pos": [754.5944084089784, 0, 115.74873734152916],
+      "scale": 0.7
+    },
+    { "name": "ArenaColumn4", "clone": "Scenery.TempleColumn", "pos": [742, 0, 91], "scale": 0.7 },
+    {
+      "name": "ArenaColumn5",
+      "clone": "Scenery.TempleColumn",
+      "pos": [754.5944084089784, 0, 66.25126265847084],
+      "scale": 0.7
+    },
+    {
+      "name": "ArenaColumn7",
+      "clone": "Scenery.TempleColumn",
+      "pos": [815.4055915910216, 0, 66.25126265847084],
+      "scale": 0.7
+    },
+    {
+      "name": "ArenaThreshold",
+      "size": [24, 0.15, 3],
+      "pos": [785, 0.6, 57],
+      "color": [136, 231, 255],
+      "material": "Neon",
+      "collide": false
+    },
+    {
+      "name": "EnemySpawn_01",
+      "size": [2, 0.2, 2],
+      "pos": [700, 1, -38],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Frost", "EnemyId": "icebound_knight" }
+    },
+    {
+      "name": "EnemyArtwork_icebound_knight",
+      "clone": "Characters.icebound_knight",
+      "pos": [700, 0, -38],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_02",
+      "size": [2, 0.2, 2],
+      "pos": [735, 1, -50],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Frost", "EnemyId": "glacier_hound" }
+    },
+    {
+      "name": "EnemyArtwork_glacier_hound",
+      "clone": "Characters.glacier_hound",
+      "pos": [735, 0, -50],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_03",
+      "size": [2, 0.2, 2],
+      "pos": [770, 1, -38],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Frost", "EnemyId": "rime_bow" }
+    },
+    {
+      "name": "EnemyArtwork_rime_bow",
+      "clone": "Characters.rime_bow",
+      "pos": [770, 0, -38],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_04",
+      "size": [2, 0.2, 2],
+      "pos": [805, 1, -50],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Frost", "EnemyId": "permafrost_seer" }
+    },
+    {
+      "name": "EnemyArtwork_permafrost_seer",
+      "clone": "Characters.permafrost_seer",
+      "pos": [805, 0, -50],
+      "scale": 1
+    },
+    {
+      "name": "Gather_Crystal_1",
+      "size": [2, 0.2, 2],
+      "pos": [610, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Frost", "ResourceId": "Crystal" }
+    },
+    { "name": "Resource_0_0", "clone": "Items.Crystal", "pos": [610, 0, 55], "scale": 1.5 },
+    { "name": "Resource_0_1", "clone": "Items.Crystal", "pos": [612, 0, 58], "scale": 1.5 },
+    { "name": "Resource_0_2", "clone": "Items.Crystal", "pos": [614, 0, 55], "scale": 1.5 },
+    {
+      "name": "Gather_Ore_2",
+      "size": [2, 0.2, 2],
+      "pos": [640, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Frost", "ResourceId": "Ore" }
+    },
+    { "name": "Resource_1_0", "clone": "Items.Ore", "pos": [640, 0, 55], "scale": 1.5 },
+    { "name": "Resource_1_1", "clone": "Items.Ore", "pos": [642, 0, 58], "scale": 1.5 },
+    { "name": "Resource_1_2", "clone": "Items.Ore", "pos": [644, 0, 55], "scale": 1.5 },
+    {
+      "name": "Gather_Herb_3",
+      "size": [2, 0.2, 2],
+      "pos": [670, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Frost", "ResourceId": "Herb" }
+    },
+    { "name": "Resource_2_0", "clone": "Items.Herb", "pos": [670, 0, 55], "scale": 1.5 },
+    { "name": "Resource_2_1", "clone": "Items.Herb", "pos": [672, 0, 58], "scale": 1.5 },
+    { "name": "Resource_2_2", "clone": "Items.Herb", "pos": [674, 0, 55], "scale": 1.5 },
+    {
+      "name": "Mountain0",
+      "size": [43, 60, 44],
+      "pos": [575, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "Snowcap0",
+      "size": [27, 30, 28],
+      "pos": [575, 45, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "Mountain1",
+      "size": [43, 85, 44],
+      "pos": [604, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 47, 0]
+    },
+    {
+      "name": "Snowcap1",
+      "size": [27, 42, 28],
+      "pos": [604, 57, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 47, 0]
+    },
+    {
+      "name": "Mountain2",
+      "size": [43, 110, 44],
+      "pos": [633, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 94, 0]
+    },
+    {
+      "name": "Snowcap2",
+      "size": [27, 54, 28],
+      "pos": [633, 69, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 94, 0]
+    },
+    {
+      "name": "Mountain3",
+      "size": [43, 60, 44],
+      "pos": [662, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 141, 0]
+    },
+    {
+      "name": "Snowcap3",
+      "size": [27, 30, 28],
+      "pos": [662, 45, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 141, 0]
+    },
+    {
+      "name": "Mountain4",
+      "size": [43, 85, 44],
+      "pos": [691, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 188, 0]
+    },
+    {
+      "name": "Snowcap4",
+      "size": [27, 42, 28],
+      "pos": [691, 57, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 188, 0]
+    },
+    {
+      "name": "Mountain5",
+      "size": [43, 110, 44],
+      "pos": [720, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 235, 0]
+    },
+    {
+      "name": "Snowcap5",
+      "size": [27, 54, 28],
+      "pos": [720, 69, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 235, 0]
+    },
+    {
+      "name": "Mountain6",
+      "size": [43, 60, 44],
+      "pos": [749, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 282, 0]
+    },
+    {
+      "name": "Snowcap6",
+      "size": [27, 30, 28],
+      "pos": [749, 45, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 282, 0]
+    },
+    {
+      "name": "Mountain7",
+      "size": [43, 85, 44],
+      "pos": [778, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 329, 0]
+    },
+    {
+      "name": "Snowcap7",
+      "size": [27, 42, 28],
+      "pos": [778, 57, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 329, 0]
+    },
+    {
+      "name": "Mountain8",
+      "size": [43, 110, 44],
+      "pos": [807, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 376, 0]
+    },
+    {
+      "name": "Snowcap8",
+      "size": [27, 54, 28],
+      "pos": [807, 69, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 376, 0]
+    },
+    {
+      "name": "Mountain9",
+      "size": [43, 60, 44],
+      "pos": [836, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 423, 0]
+    },
+    {
+      "name": "Snowcap9",
+      "size": [27, 30, 28],
+      "pos": [836, 45, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 423, 0]
+    },
+    {
+      "name": "Mountain10",
+      "size": [43, 85, 44],
+      "pos": [865, 22, -116],
+      "color": [130, 164, 185],
+      "material": "Rock",
+      "shape": "Wedge",
+      "rot": [0, 470, 0]
+    },
+    {
+      "name": "Snowcap10",
+      "size": [27, 42, 28],
+      "pos": [865, 57, -116],
+      "color": [199, 222, 233],
+      "material": "Snow",
+      "shape": "Wedge",
+      "rot": [0, 470, 0]
+    },
+    {
+      "name": "FrozenLake",
+      "size": [70, 0.15, 38],
+      "pos": [642, 0.08, 91],
+      "color": [98, 174, 210],
+      "material": "Ice"
+    },
+    { "name": "IceMonolith0", "clone": "Scenery.Runestone", "pos": [745, 0, 128], "scale": 1.5 },
+    { "name": "IceMonolith1", "clone": "Scenery.Runestone", "pos": [761, 0, 128], "scale": 1.5 },
+    { "name": "IceMonolith2", "clone": "Scenery.Runestone", "pos": [777, 0, 128], "scale": 1.5 },
+    { "name": "IceMonolith3", "clone": "Scenery.Runestone", "pos": [793, 0, 128], "scale": 1.5 },
+    { "name": "IceMonolith4", "clone": "Scenery.Runestone", "pos": [809, 0, 128], "scale": 1.5 },
+    { "name": "IceMonolith5", "clone": "Scenery.Runestone", "pos": [825, 0, 128], "scale": 1.5 },
+    {
+      "name": "LandscapeDetails",
+      "kind": "Folder",
+      "children": [
+        {
+          "name": "Boulder1",
+          "size": [7, 4, 5],
+          "pos": [617, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 37, 0]
+        },
+        {
+          "name": "RelicShard1",
+          "size": [1, 5, 1],
+          "pos": [621, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder3",
+          "size": [5, 6, 4],
+          "pos": [697, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 111, 0]
+        },
+        {
+          "name": "RelicShard3",
+          "size": [1, 4, 1],
+          "pos": [701, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder4",
+          "size": [7, 3, 5],
+          "pos": [737, 1.2, -94],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 148, 0]
+        },
+        {
+          "name": "RelicShard4",
+          "size": [1, 5, 1],
+          "pos": [741, 2, -94],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder5",
+          "size": [9, 4, 6],
+          "pos": [777, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 185, 0]
+        },
+        {
+          "name": "RelicShard5",
+          "size": [1, 6, 1],
+          "pos": [781, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder6",
+          "size": [5, 5, 4],
+          "pos": [817, 1.2, -94],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 222, 0]
+        },
+        {
+          "name": "RelicShard6",
+          "size": [1, 4, 1],
+          "pos": [821, 2, -94],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder7",
+          "size": [7, 6, 5],
+          "pos": [857, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 259, 0]
+        },
+        {
+          "name": "RelicShard7",
+          "size": [1, 5, 1],
+          "pos": [861, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder9",
+          "size": [5, 4, 4],
+          "pos": [617, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 333, 0]
+        },
+        {
+          "name": "RelicShard9",
+          "size": [1, 4, 1],
+          "pos": [621, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder11",
+          "size": [9, 6, 6],
+          "pos": [697, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 407, 0]
+        },
+        {
+          "name": "RelicShard11",
+          "size": [1, 6, 1],
+          "pos": [701, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder12",
+          "size": [5, 3, 4],
+          "pos": [737, 1.2, -94],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 444, 0]
+        },
+        {
+          "name": "RelicShard12",
+          "size": [1, 4, 1],
+          "pos": [741, 2, -94],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder13",
+          "size": [7, 4, 5],
+          "pos": [777, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 481, 0]
+        },
+        {
+          "name": "RelicShard13",
+          "size": [1, 5, 1],
+          "pos": [781, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder14",
+          "size": [9, 5, 6],
+          "pos": [817, 1.2, -94],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 518, 0]
+        },
+        {
+          "name": "RelicShard14",
+          "size": [1, 6, 1],
+          "pos": [821, 2, -94],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder15",
+          "size": [5, 6, 4],
+          "pos": [857, 1.2, -124],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 555, 0]
+        },
+        {
+          "name": "RelicShard15",
+          "size": [1, 4, 1],
+          "pos": [861, 2, -124],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder16",
+          "size": [7, 3, 5],
+          "pos": [577, 1.2, 72],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 592, 0]
+        },
+        {
+          "name": "RelicShard16",
+          "size": [1, 5, 1],
+          "pos": [581, 2, 72],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder17",
+          "size": [9, 4, 6],
+          "pos": [617, 1.2, 123],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 629, 0]
+        },
+        {
+          "name": "RelicShard17",
+          "size": [1, 6, 1],
+          "pos": [621, 2, 123],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder18",
+          "size": [5, 5, 4],
+          "pos": [657, 1.2, 72],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 666, 0]
+        },
+        {
+          "name": "RelicShard18",
+          "size": [1, 4, 1],
+          "pos": [661, 2, 72],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder19",
+          "size": [7, 6, 5],
+          "pos": [697, 1.2, 123],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 703, 0]
+        },
+        {
+          "name": "RelicShard19",
+          "size": [1, 5, 1],
+          "pos": [701, 2, 123],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder24",
+          "size": [5, 3, 4],
+          "pos": [577, 1.2, 72],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 888, 0]
+        },
+        {
+          "name": "RelicShard24",
+          "size": [1, 4, 1],
+          "pos": [581, 2, 72],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder25",
+          "size": [7, 4, 5],
+          "pos": [617, 1.2, 123],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 925, 0]
+        },
+        {
+          "name": "RelicShard25",
+          "size": [1, 5, 1],
+          "pos": [621, 2, 123],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder26",
+          "size": [9, 5, 6],
+          "pos": [657, 1.2, 72],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 962, 0]
+        },
+        {
+          "name": "RelicShard26",
+          "size": [1, 6, 1],
+          "pos": [661, 2, 72],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder27",
+          "size": [5, 6, 4],
+          "pos": [697, 1.2, 123],
+          "color": [199, 222, 233],
+          "material": "Snow",
+          "shape": "Ball",
+          "rot": [0, 999, 0]
+        },
+        {
+          "name": "RelicShard27",
+          "size": [1, 4, 1],
+          "pos": [701, 2, 123],
+          "color": [136, 231, 255],
+          "material": "Ice",
+          "rot": [0, 0, 20]
+        }
+      ]
+    }
+  ],
+  "attrs": {
+    "RegionId": "Frost",
+    "RegionName": "FROSTVEIL REACH",
+    "RouteOrder": 3,
+    "AuthoredBy": "WorldArt",
+    "ArtVersion": 1
+  }
+}

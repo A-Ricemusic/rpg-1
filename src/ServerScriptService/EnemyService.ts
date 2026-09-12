@@ -11,6 +11,7 @@ ALL_ENEMIES.forEach((definition) => definitions.set(definition.id, definition));
 function nearestPlayer(
   origin: Vector3,
   range: number,
+  region?: number,
 ): [Player | undefined, BasePart | undefined, number] {
   let nearest: Player | undefined;
   let nearestRoot: BasePart | undefined;
@@ -18,7 +19,14 @@ function nearestPlayer(
   Players.GetPlayers().forEach((player) => {
     const humanoid = player.Character?.FindFirstChildOfClass("Humanoid");
     const root = player.Character?.FindFirstChild("HumanoidRootPart");
-    if (humanoid && humanoid.Health > 0 && root?.IsA("BasePart")) {
+    if (
+      (region === undefined || player.GetAttribute("Region") === region) &&
+      player.GetAttribute("DivineParent") !== undefined &&
+      player.GetAttribute("AtCamp") !== true &&
+      humanoid &&
+      humanoid.Health > 0 &&
+      root?.IsA("BasePart")
+    ) {
       const candidate = root.Position.sub(origin).Magnitude;
       if (candidate < distance) {
         nearest = player;
@@ -96,7 +104,7 @@ function spikeAttack(
   const warning = effectPart(
     "DangerTelegraph",
     new Vector3(0.25, radius * 2, radius * 2),
-    new Vector3(targetPosition.X, 0.15, targetPosition.Z),
+    new Vector3(targetPosition.X, targetPosition.Y - 2.8, targetPosition.Z),
     color,
   );
   warning.Shape = Enum.PartType.Cylinder;
@@ -108,7 +116,7 @@ function spikeAttack(
     const spike = effectPart(
       "EnergySpike",
       new Vector3(radius, 18, radius),
-      new Vector3(targetPosition.X, 9, targetPosition.Z),
+      new Vector3(targetPosition.X, targetPosition.Y + 6, targetPosition.Z),
       color,
     );
     spike.Shape = Enum.PartType.Ball;
@@ -132,11 +140,13 @@ function novaAttack(origin: Vector3, definition: EnemyDefinition, callbacks: Ene
   const warning = effectPart(
     "NovaTelegraph",
     new Vector3(0.2, radius * 2, radius * 2),
-    origin.sub(new Vector3(0, origin.Y - 0.15, 0)),
+    origin.sub(new Vector3(0, 3, 0)),
     color,
   );
   warning.Shape = Enum.PartType.Cylinder;
-  warning.CFrame = new CFrame(origin.X, 0.15, origin.Z).mul(CFrame.Angles(0, 0, math.rad(90)));
+  warning.CFrame = new CFrame(origin.X, origin.Y - 3, origin.Z).mul(
+    CFrame.Angles(0, 0, math.rad(90)),
+  );
   warning.Transparency = 0.55;
   task.delay(0.85, () => {
     if (!warning.Parent) return;
@@ -200,9 +210,13 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
       const humanoid = instance.FindFirstChildOfClass("Humanoid");
       const root = instance.FindFirstChild("HumanoidRootPart");
       if (!definition || !humanoid || humanoid.Health <= 0 || !root?.IsA("BasePart")) continue;
+      const stunned = instance.GetAttribute("StunnedUntil");
+      if (typeIs(stunned, "number") && stunned > now) continue;
+      const region = instance.GetAttribute("AdventureRegion");
       const [player, targetRoot, distance] = nearestPlayer(
         root.Position,
-        math.max(110, definition.range + 25),
+        math.max(70, definition.range + 10),
+        typeIs(region, "number") ? region : undefined,
       );
       if (!player || !targetRoot) continue;
       const ranged =
@@ -224,7 +238,44 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
           const nextPosition = root.Position.add(
             delta.Unit.mul(math.min(delta.Magnitude, speed * dt)),
           );
-          instance.PivotTo(CFrame.lookAt(nextPosition, horizontalTarget));
+          const params = new RaycastParams();
+          params.FilterType = Enum.RaycastFilterType.Exclude;
+          const excluded: Instance[] = [instance];
+          for (const p of Players.GetPlayers()) if (p.Character) excluded.push(p.Character);
+          params.FilterDescendantsInstances = excluded;
+          const obstruction = Workspace.Raycast(
+            root.Position,
+            nextPosition.sub(root.Position).mul(3),
+            params,
+          );
+          const groundParams = new RaycastParams();
+          const authored = Workspace.FindFirstChild("EldoriaWorld");
+          groundParams.FilterType = Enum.RaycastFilterType.Include;
+          groundParams.FilterDescendantsInstances = authored
+            ? [authored, Workspace.Terrain]
+            : [Workspace.FindFirstChild("DemigodTestContent")!];
+          const ground = Workspace.Raycast(
+            nextPosition.add(new Vector3(0, 15, 0)),
+            new Vector3(0, -50, 0),
+            groundParams,
+          );
+          if (
+            !obstruction &&
+            ground &&
+            math.abs(ground.Position.Y + root.Size.Y / 2 - root.Position.Y) < 8
+          ) {
+            const grounded = new Vector3(
+              nextPosition.X,
+              ground.Position.Y + root.Size.Y / 2,
+              nextPosition.Z,
+            );
+            instance.PivotTo(
+              CFrame.lookAt(
+                grounded,
+                new Vector3(horizontalTarget.X, grounded.Y, horizontalTarget.Z),
+              ),
+            );
+          }
         }
       }
       if (now < (cooldowns.get(instance) ?? 0) || distance > definition.range) continue;
@@ -254,6 +305,8 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
             : definition,
           callbacks,
         );
+      if (definition.id === "null_sovereign" && enraged)
+        spikeAttack(targetRoot.Position, definition, callbacks);
       if (enraged) cooldowns.set(instance, now + definition.cooldown * 0.7);
     }
   });

@@ -1,4 +1,5 @@
 import { CollectionService, Workspace } from "@rbxts/services";
+import { cloneVisual } from "./AdventureWorld";
 import { ALL_ENEMIES, EnemyDefinition, RegionId } from "shared/EnemyConfig";
 
 interface EnemyRegion {
@@ -86,7 +87,11 @@ function weldDecoration(
   return value;
 }
 
-function createEnemy(definition: EnemyDefinition, position: Vector3, parent: Instance): Model {
+export function createEnemy(
+  definition: EnemyDefinition,
+  position: Vector3,
+  parent: Instance,
+): Model {
   const model = new Instance("Model");
   model.Name = definition.id;
   model.SetAttribute("Enemy", true);
@@ -169,6 +174,33 @@ function createEnemy(definition: EnemyDefinition, position: Vector3, parent: Ins
   humanoid.HealthDisplayDistance = definition.boss ? 140 : 80;
   humanoid.Parent = model;
   model.PrimaryPart = root;
+  const visual =
+    cloneVisual("Characters", [definition.id, definition.name], position, model) ??
+    cloneVisual("Rigs", [definition.id, definition.boss ? "Boss" : "Enemy"], position, model);
+  if (visual) {
+    for (const child of model.GetChildren()) if (child.IsA("BasePart")) child.Transparency = 1;
+    for (const child of visual.GetDescendants()) if (child.IsA("Humanoid")) child.Destroy();
+  }
+  const healthGui = new Instance("BillboardGui");
+  healthGui.Name = "EnemyHealth";
+  healthGui.Size = UDim2.fromOffset(180, 44);
+  healthGui.StudsOffset = new Vector3(0, root.Size.Y / 2 + 3, 0);
+  healthGui.AlwaysOnTop = true;
+  healthGui.MaxDistance = 180;
+  healthGui.Parent = root;
+  const healthLabel = new Instance("TextLabel");
+  healthLabel.BackgroundTransparency = 0.3;
+  healthLabel.BackgroundColor3 = Color3.fromRGB(20, 22, 30);
+  healthLabel.Size = UDim2.fromScale(1, 1);
+  healthLabel.TextColor3 = rgb(definition.accent);
+  healthLabel.TextSize = 13;
+  healthLabel.TextWrapped = true;
+  healthLabel.Parent = healthGui;
+  const updateHealth = () => {
+    healthLabel.Text = `${definition.name}\n${math.ceil(humanoid.Health)} / ${humanoid.MaxHealth} HP • ${definition.attack}`;
+  };
+  updateHealth();
+  humanoid.HealthChanged.Connect(updateHealth);
   model.Parent = parent;
   CollectionService.AddTag(model, "Enemy");
 

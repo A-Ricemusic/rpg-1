@@ -1,0 +1,924 @@
+{
+  "name": "01_WhisperingWilds",
+  "kind": "Model",
+  "children": [
+    {
+      "name": "Landmass",
+      "size": [340, 20, 280],
+      "pos": [0, -9.88, 0],
+      "color": [74, 106, 69],
+      "material": "Grass"
+    },
+    {
+      "name": "PilgrimRoad",
+      "size": [340, 0.3, 18],
+      "pos": [0, 0.15, 0],
+      "color": [165, 151, 124],
+      "material": "Cobblestone",
+      "attrs": { "RouteId": "Verdant_Main", "Walkable": true }
+    },
+    {
+      "name": "SanctumApproach",
+      "size": [18, 0.3, 90],
+      "pos": [65, 0.15, 45],
+      "color": [165, 151, 124],
+      "material": "Cobblestone"
+    },
+    {
+      "name": "CampApproach",
+      "size": [18, 0.3, 75],
+      "pos": [-85, 0.15, -37],
+      "color": [165, 151, 124],
+      "material": "Cobblestone"
+    },
+    {
+      "name": "Entrance",
+      "size": [2, 0.2, 2],
+      "pos": [-165, 1, 0],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Entrance", "RegionId": "Verdant", "RouteOrder": 1 }
+    },
+    {
+      "name": "Exit",
+      "size": [2, 0.2, 2],
+      "pos": [165, 1, 0],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Exit", "RegionId": "Verdant", "NextRegion": "Ember" }
+    },
+    { "name": "EntryColumn-1", "clone": "Scenery.TempleColumn", "pos": [-152, 0, -14], "scale": 1 },
+    {
+      "name": "EntryAccent-1",
+      "size": [2, 9, 0.4],
+      "pos": [-152, 8, -15.3],
+      "color": [161, 216, 113],
+      "material": "Neon",
+      "light": 18,
+      "collide": false
+    },
+    { "name": "EntryColumn1", "clone": "Scenery.TempleColumn", "pos": [-152, 0, 14], "scale": 1 },
+    {
+      "name": "EntryAccent1",
+      "size": [2, 9, 0.4],
+      "pos": [-152, 8, 12.7],
+      "color": [161, 216, 113],
+      "material": "Neon",
+      "light": 18,
+      "collide": false
+    },
+    {
+      "name": "EntranceLintel",
+      "size": [6, 3, 34],
+      "pos": [-152, 16, 0],
+      "color": [74, 106, 69],
+      "material": "Grass"
+    },
+    {
+      "name": "RegionSign",
+      "size": [18, 5, 1],
+      "pos": [-149, 12, 0],
+      "color": [74, 106, 69],
+      "material": "Grass",
+      "text": "WHISPERING WILDS",
+      "collide": false,
+      "rot": [0, 90, 0]
+    },
+    {
+      "name": "CampSquare",
+      "size": [65, 0.4, 48],
+      "pos": [-85, 0.2, -64],
+      "color": [129, 120, 102],
+      "material": "Cobblestone"
+    },
+    { "name": "MerchantStall", "clone": "Scenery.MarketStall", "pos": [-105, 0, -75], "scale": 1 },
+    { "name": "Merchant", "clone": "Characters.Merchant", "pos": [-105, 0, -71], "scale": 1 },
+    {
+      "name": "MerchantLocation",
+      "size": [2, 0.2, 2],
+      "pos": [-105, 1, -66],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Merchant", "RegionId": "Verdant" }
+    },
+    { "name": "OraclePavilion", "clone": "Scenery.MarketStall", "pos": [-67, 0, -75], "scale": 1 },
+    { "name": "QuestGiver", "clone": "Characters.QuestGiver", "pos": [-67, 0, -71], "scale": 1 },
+    {
+      "name": "QuestGiverLocation",
+      "size": [2, 0.2, 2],
+      "pos": [-67, 1, -66],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "QuestGiver", "RegionId": "Verdant" }
+    },
+    {
+      "name": "ShopDisplayHealingPotion",
+      "clone": "Items.HealingPotion",
+      "pos": [-108, 3.5, -75],
+      "scale": 1
+    },
+    { "name": "ShopDisplayCoin", "clone": "Items.Coin", "pos": [-105, 3.5, -75], "scale": 1 },
+    { "name": "ShopDisplayCrystal", "clone": "Items.Crystal", "pos": [-102, 3.5, -75], "scale": 1 },
+    {
+      "name": "CampNotice",
+      "size": [12, 4, 0.5],
+      "pos": [-85, 4, -88],
+      "color": [91, 61, 42],
+      "material": "Wood",
+      "text": "SANCTUARY • SUPPLIES"
+    },
+    {
+      "name": "Bench-1",
+      "size": [9, 1, 2],
+      "pos": [-101, 1, -50],
+      "color": [91, 61, 42],
+      "material": "WoodPlanks"
+    },
+    {
+      "name": "Bench1",
+      "size": [9, 1, 2],
+      "pos": [-69, 1, -50],
+      "color": [91, 61, 42],
+      "material": "WoodPlanks"
+    },
+    { "name": "RoadLantern0", "clone": "Scenery.WayLantern", "pos": [-130, 0, -13], "scale": 1 },
+    { "name": "RoadLantern1", "clone": "Scenery.WayLantern", "pos": [-92, 0, 13], "scale": 1 },
+    { "name": "RoadLantern2", "clone": "Scenery.WayLantern", "pos": [-54, 0, -13], "scale": 1 },
+    { "name": "RoadLantern3", "clone": "Scenery.WayLantern", "pos": [-16, 0, 13], "scale": 1 },
+    { "name": "RoadLantern4", "clone": "Scenery.WayLantern", "pos": [22, 0, -13], "scale": 1 },
+    { "name": "RoadLantern5", "clone": "Scenery.WayLantern", "pos": [60, 0, 13], "scale": 1 },
+    { "name": "RoadLantern6", "clone": "Scenery.WayLantern", "pos": [98, 0, -13], "scale": 1 },
+    { "name": "RoadLantern7", "clone": "Scenery.WayLantern", "pos": [136, 0, 13], "scale": 1 },
+    {
+      "name": "BossArena",
+      "size": [82, 0.5, 72],
+      "pos": [65, 0.25, 91],
+      "color": [74, 106, 69],
+      "material": "Grass",
+      "attrs": { "MarkerType": "BossArena", "RegionId": "Verdant" }
+    },
+    {
+      "name": "BossSpawn",
+      "size": [2, 0.2, 2],
+      "pos": [65, 1, 91],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "BossSpawn", "RegionId": "Verdant", "EnemyId": "elder_briar" }
+    },
+    { "name": "BossArtwork", "clone": "Characters.elder_briar", "pos": [65, 0.5, 105], "scale": 1 },
+    { "name": "ArenaColumn0", "clone": "Scenery.TempleColumn", "pos": [108, 0, 91], "scale": 0.7 },
+    {
+      "name": "ArenaColumn1",
+      "clone": "Scenery.TempleColumn",
+      "pos": [95.40559159102155, 0, 115.74873734152916],
+      "scale": 0.7
+    },
+    { "name": "ArenaColumn2", "clone": "Scenery.TempleColumn", "pos": [65, 0, 126], "scale": 0.7 },
+    {
+      "name": "ArenaColumn3",
+      "clone": "Scenery.TempleColumn",
+      "pos": [34.59440840897846, 0, 115.74873734152916],
+      "scale": 0.7
+    },
+    { "name": "ArenaColumn4", "clone": "Scenery.TempleColumn", "pos": [22, 0, 91], "scale": 0.7 },
+    {
+      "name": "ArenaColumn5",
+      "clone": "Scenery.TempleColumn",
+      "pos": [34.59440840897845, 0, 66.25126265847084],
+      "scale": 0.7
+    },
+    {
+      "name": "ArenaColumn7",
+      "clone": "Scenery.TempleColumn",
+      "pos": [95.40559159102153, 0, 66.25126265847084],
+      "scale": 0.7
+    },
+    {
+      "name": "ArenaThreshold",
+      "size": [24, 0.15, 3],
+      "pos": [65, 0.6, 57],
+      "color": [161, 216, 113],
+      "material": "Neon",
+      "collide": false
+    },
+    {
+      "name": "EnemySpawn_01",
+      "size": [2, 0.2, 2],
+      "pos": [-20, 1, -38],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Verdant", "EnemyId": "moss_brawler" }
+    },
+    {
+      "name": "EnemyArtwork_moss_brawler",
+      "clone": "Characters.moss_brawler",
+      "pos": [-20, 0, -38],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_02",
+      "size": [2, 0.2, 2],
+      "pos": [15, 1, -50],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Verdant", "EnemyId": "thorn_runner" }
+    },
+    {
+      "name": "EnemyArtwork_thorn_runner",
+      "clone": "Characters.thorn_runner",
+      "pos": [15, 0, -50],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_03",
+      "size": [2, 0.2, 2],
+      "pos": [50, 1, -38],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Verdant", "EnemyId": "spore_slinger" }
+    },
+    {
+      "name": "EnemyArtwork_spore_slinger",
+      "clone": "Characters.spore_slinger",
+      "pos": [50, 0, -38],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_04",
+      "size": [2, 0.2, 2],
+      "pos": [85, 1, -50],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Verdant", "EnemyId": "root_shaman" }
+    },
+    {
+      "name": "EnemyArtwork_root_shaman",
+      "clone": "Characters.root_shaman",
+      "pos": [85, 0, -50],
+      "scale": 1
+    },
+    {
+      "name": "Gather_Wood_1",
+      "size": [2, 0.2, 2],
+      "pos": [-110, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Verdant", "ResourceId": "Wood" }
+    },
+    { "name": "Resource_0_0", "clone": "Items.Wood", "pos": [-110, 0, 55], "scale": 1.5 },
+    { "name": "Resource_0_1", "clone": "Items.Wood", "pos": [-108, 0, 58], "scale": 1.5 },
+    { "name": "Resource_0_2", "clone": "Items.Wood", "pos": [-106, 0, 55], "scale": 1.5 },
+    {
+      "name": "Gather_Herb_2",
+      "size": [2, 0.2, 2],
+      "pos": [-80, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Verdant", "ResourceId": "Herb" }
+    },
+    { "name": "Resource_1_0", "clone": "Items.Herb", "pos": [-80, 0, 55], "scale": 1.5 },
+    { "name": "Resource_1_1", "clone": "Items.Herb", "pos": [-78, 0, 58], "scale": 1.5 },
+    { "name": "Resource_1_2", "clone": "Items.Herb", "pos": [-76, 0, 55], "scale": 1.5 },
+    {
+      "name": "Gather_Crystal_3",
+      "size": [2, 0.2, 2],
+      "pos": [-50, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Verdant", "ResourceId": "Crystal" }
+    },
+    { "name": "Resource_2_0", "clone": "Items.Crystal", "pos": [-50, 0, 55], "scale": 1.5 },
+    { "name": "Resource_2_1", "clone": "Items.Crystal", "pos": [-48, 0, 58], "scale": 1.5 },
+    { "name": "Resource_2_2", "clone": "Items.Crystal", "pos": [-46, 0, 55], "scale": 1.5 },
+    { "name": "SacredOak0", "clone": "Scenery.AncientTree", "pos": [-130, 0, -110], "scale": 0.8 },
+    { "name": "SacredOak1", "clone": "Scenery.AncientTree", "pos": [-88, 0, -122], "scale": 1 },
+    {
+      "name": "SacredOak2",
+      "clone": "Scenery.AncientTree",
+      "pos": [-46, 0, -110],
+      "scale": 1.2000000000000002
+    },
+    { "name": "SacredOak3", "clone": "Scenery.AncientTree", "pos": [-4, 0, -122], "scale": 0.8 },
+    { "name": "SacredOak4", "clone": "Scenery.AncientTree", "pos": [38, 0, -110], "scale": 1 },
+    {
+      "name": "SacredOak5",
+      "clone": "Scenery.AncientTree",
+      "pos": [80, 0, -122],
+      "scale": 1.2000000000000002
+    },
+    { "name": "SacredOak6", "clone": "Scenery.AncientTree", "pos": [122, 0, -110], "scale": 0.8 },
+    { "name": "SacredOak7", "clone": "Scenery.AncientTree", "pos": [-130, 0, -122], "scale": 1 },
+    {
+      "name": "SacredOak8",
+      "clone": "Scenery.AncientTree",
+      "pos": [-88, 0, -110],
+      "scale": 1.2000000000000002
+    },
+    { "name": "SacredOak9", "clone": "Scenery.AncientTree", "pos": [-46, 0, -122], "scale": 0.8 },
+    { "name": "SacredOak10", "clone": "Scenery.AncientTree", "pos": [-4, 0, -110], "scale": 1 },
+    {
+      "name": "SacredOak11",
+      "clone": "Scenery.AncientTree",
+      "pos": [38, 0, -122],
+      "scale": 1.2000000000000002
+    },
+    { "name": "SacredOak12", "clone": "Scenery.AncientTree", "pos": [80, 0, -110], "scale": 0.8 },
+    { "name": "SacredOak13", "clone": "Scenery.AncientTree", "pos": [122, 0, -122], "scale": 1 },
+    {
+      "name": "SacredOak14",
+      "clone": "Scenery.AncientTree",
+      "pos": [-130, 0, 70],
+      "scale": 1.2000000000000002
+    },
+    { "name": "SacredOak15", "clone": "Scenery.AncientTree", "pos": [-88, 0, 110], "scale": 0.8 },
+    { "name": "SacredOak16", "clone": "Scenery.AncientTree", "pos": [-46, 0, 70], "scale": 1 },
+    {
+      "name": "SacredOak17",
+      "clone": "Scenery.AncientTree",
+      "pos": [-4, 0, 110],
+      "scale": 1.2000000000000002
+    },
+    { "name": "SacredOak21", "clone": "Scenery.AncientTree", "pos": [-130, 0, 110], "scale": 0.8 },
+    { "name": "SacredOak22", "clone": "Scenery.AncientTree", "pos": [-88, 0, 70], "scale": 1 },
+    {
+      "name": "SacredOak23",
+      "clone": "Scenery.AncientTree",
+      "pos": [-46, 0, 110],
+      "scale": 1.2000000000000002
+    },
+    { "name": "SacredOak24", "clone": "Scenery.AncientTree", "pos": [-4, 0, 70], "scale": 0.8 },
+    { "name": "Blacksmith", "clone": "Characters.Blacksmith", "pos": [-122, 0, -40], "scale": 1 },
+    {
+      "name": "BlacksmithLocation",
+      "size": [2, 0.2, 2],
+      "pos": [-122, 1, -35],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Blacksmith", "RegionId": "Verdant" }
+    },
+    {
+      "name": "Anvil",
+      "size": [4, 2, 2],
+      "pos": [-122, 1, -45],
+      "color": [61, 66, 74],
+      "material": "Metal"
+    },
+    { "name": "TemplePillar0", "clone": "Scenery.TempleColumn", "pos": [35, 0, 75], "scale": 1.3 },
+    { "name": "TemplePillar1", "clone": "Scenery.TempleColumn", "pos": [65, 0, 75], "scale": 1.3 },
+    { "name": "TemplePillar2", "clone": "Scenery.TempleColumn", "pos": [95, 0, 75], "scale": 1.3 },
+    { "name": "TemplePillar3", "clone": "Scenery.TempleColumn", "pos": [35, 0, 117], "scale": 1.3 },
+    { "name": "TemplePillar4", "clone": "Scenery.TempleColumn", "pos": [65, 0, 117], "scale": 1.3 },
+    { "name": "TemplePillar5", "clone": "Scenery.TempleColumn", "pos": [95, 0, 117], "scale": 1.3 },
+    {
+      "name": "TemplePediment",
+      "size": [78, 4, 12],
+      "pos": [65, 21, 118],
+      "color": [139, 150, 139],
+      "material": "Marble"
+    },
+    { "name": "MemoryAltar", "clone": "Scenery.Runestone", "pos": [65, 0.5, 123], "scale": 1.2 },
+    {
+      "name": "WeaponDisplay",
+      "kind": "Model",
+      "children": [
+        {
+          "name": "Sword",
+          "kind": "Model",
+          "children": [
+            {
+              "name": "Handle",
+              "size": [0.32, 1.15, 0.32],
+              "pos": [-126, 3.5, -47],
+              "color": [91, 61, 42],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Pommel",
+              "size": [0.5, 0.3, 0.5],
+              "pos": [-126, 2.85, -47],
+              "color": [202, 164, 83],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Guard",
+              "size": [1.7, 0.22, 0.45],
+              "pos": [-126, 4.15, -47],
+              "color": [202, 164, 83],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Blade",
+              "size": [0.55, 3.1, 0.16],
+              "pos": [-126, 5.8, -47],
+              "color": [192, 218, 225],
+              "material": "Metal",
+              "collide": false
+            },
+            {
+              "name": "Fuller",
+              "size": [0.1, 2.8, 0.18],
+              "pos": [-126, 5.8, -47],
+              "color": [110, 230, 236],
+              "material": "Neon",
+              "collide": false
+            },
+            {
+              "name": "Tip",
+              "size": [0.55, 0.65, 0.16],
+              "pos": [-126, 7.65, -47],
+              "color": [192, 218, 225],
+              "material": "Metal",
+              "shape": "Wedge",
+              "collide": false
+            }
+          ]
+        },
+        {
+          "name": "Trident",
+          "kind": "Model",
+          "children": [
+            {
+              "name": "Handle",
+              "size": [0.28, 5.7, 0.28],
+              "pos": [-124, 4.9, -47],
+              "color": [91, 61, 42],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Collar",
+              "size": [0.5, 0.5, 0.5],
+              "pos": [-124, 7.5, -47],
+              "color": [202, 164, 83],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Crossbar",
+              "size": [1.9, 0.24, 0.3],
+              "pos": [-124, 7.85, -47],
+              "color": [202, 164, 83],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Tine0",
+              "size": [0.22, 1.4, 0.22],
+              "pos": [-124.8, 8.5, -47],
+              "color": [110, 230, 236],
+              "material": "Metal",
+              "collide": false
+            },
+            {
+              "name": "Tine1",
+              "size": [0.22, 1.9, 0.22],
+              "pos": [-124, 8.75, -47],
+              "color": [110, 230, 236],
+              "material": "Metal",
+              "collide": false
+            },
+            {
+              "name": "Tine2",
+              "size": [0.22, 1.4, 0.22],
+              "pos": [-123.2, 8.5, -47],
+              "color": [110, 230, 236],
+              "material": "Metal",
+              "collide": false
+            }
+          ]
+        },
+        {
+          "name": "Bow",
+          "kind": "Model",
+          "children": [
+            {
+              "name": "Handle",
+              "size": [0.35, 1, 0.4],
+              "pos": [-122, 3.5, -47],
+              "color": [91, 61, 42],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Limb-1",
+              "size": [0.25, 1.55, 0.35],
+              "pos": [-121.7, 2.38, -47],
+              "color": [202, 164, 83],
+              "material": "Wood",
+              "rot": [0, 0, 25],
+              "collide": false
+            },
+            {
+              "name": "Tip-1",
+              "size": [0.2, 0.9, 0.28],
+              "pos": [-121.65, 1.38, -47],
+              "color": [202, 164, 83],
+              "material": "Wood",
+              "rot": [0, 0, -38],
+              "collide": false
+            },
+            {
+              "name": "Limb1",
+              "size": [0.25, 1.55, 0.35],
+              "pos": [-121.7, 4.62, -47],
+              "color": [202, 164, 83],
+              "material": "Wood",
+              "rot": [0, 0, -25],
+              "collide": false
+            },
+            {
+              "name": "Tip1",
+              "size": [0.2, 0.9, 0.28],
+              "pos": [-121.65, 5.62, -47],
+              "color": [202, 164, 83],
+              "material": "Wood",
+              "rot": [0, 0, 38],
+              "collide": false
+            },
+            {
+              "name": "Bowstring",
+              "size": [0.035, 4.8, 0.035],
+              "pos": [-122, 3.5, -47],
+              "color": [238, 224, 189],
+              "material": "Fabric",
+              "collide": false
+            }
+          ]
+        },
+        {
+          "name": "Arrow",
+          "kind": "Model",
+          "children": [
+            {
+              "name": "Handle",
+              "size": [0.1, 2.8, 0.1],
+              "pos": [-120, 3.5, -47],
+              "color": [91, 61, 42],
+              "material": "SmoothPlastic",
+              "collide": false
+            },
+            {
+              "name": "Arrowhead",
+              "size": [0.38, 0.55, 0.15],
+              "pos": [-120, 5.1, -47],
+              "color": [195, 218, 222],
+              "material": "Metal",
+              "shape": "Wedge",
+              "collide": false
+            },
+            {
+              "name": "Fletching",
+              "size": [0.5, 0.6, 0.08],
+              "pos": [-120, 2.4, -47],
+              "color": [237, 229, 202],
+              "material": "Fabric",
+              "collide": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "LandscapeDetails",
+      "kind": "Folder",
+      "children": [
+        {
+          "name": "Boulder1",
+          "size": [7, 4, 5],
+          "pos": [-103, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 37, 0]
+        },
+        {
+          "name": "Understory1",
+          "clone": "Scenery.AncientTree",
+          "pos": [-94, 0, -120],
+          "scale": 0.5700000000000001
+        },
+        {
+          "name": "Boulder3",
+          "size": [5, 6, 4],
+          "pos": [-23, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 111, 0]
+        },
+        {
+          "name": "Understory3",
+          "clone": "Scenery.AncientTree",
+          "pos": [-14, 0, -120],
+          "scale": 0.45
+        },
+        {
+          "name": "Boulder4",
+          "size": [7, 3, 5],
+          "pos": [17, 1.2, -94],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 148, 0]
+        },
+        {
+          "name": "Understory4",
+          "clone": "Scenery.AncientTree",
+          "pos": [26, 0, -90],
+          "scale": 0.5700000000000001
+        },
+        {
+          "name": "Boulder5",
+          "size": [9, 4, 6],
+          "pos": [57, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 185, 0]
+        },
+        {
+          "name": "Understory5",
+          "clone": "Scenery.AncientTree",
+          "pos": [66, 0, -120],
+          "scale": 0.69
+        },
+        {
+          "name": "Boulder6",
+          "size": [5, 5, 4],
+          "pos": [97, 1.2, -94],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 222, 0]
+        },
+        {
+          "name": "Understory6",
+          "clone": "Scenery.AncientTree",
+          "pos": [106, 0, -90],
+          "scale": 0.45
+        },
+        {
+          "name": "Boulder7",
+          "size": [7, 6, 5],
+          "pos": [137, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 259, 0]
+        },
+        {
+          "name": "Understory7",
+          "clone": "Scenery.AncientTree",
+          "pos": [146, 0, -120],
+          "scale": 0.5700000000000001
+        },
+        {
+          "name": "Boulder9",
+          "size": [5, 4, 4],
+          "pos": [-103, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 333, 0]
+        },
+        {
+          "name": "Understory9",
+          "clone": "Scenery.AncientTree",
+          "pos": [-94, 0, -120],
+          "scale": 0.45
+        },
+        {
+          "name": "Boulder11",
+          "size": [9, 6, 6],
+          "pos": [-23, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 407, 0]
+        },
+        {
+          "name": "Understory11",
+          "clone": "Scenery.AncientTree",
+          "pos": [-14, 0, -120],
+          "scale": 0.69
+        },
+        {
+          "name": "Boulder12",
+          "size": [5, 3, 4],
+          "pos": [17, 1.2, -94],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 444, 0]
+        },
+        {
+          "name": "Understory12",
+          "clone": "Scenery.AncientTree",
+          "pos": [26, 0, -90],
+          "scale": 0.45
+        },
+        {
+          "name": "Boulder13",
+          "size": [7, 4, 5],
+          "pos": [57, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 481, 0]
+        },
+        {
+          "name": "Understory13",
+          "clone": "Scenery.AncientTree",
+          "pos": [66, 0, -120],
+          "scale": 0.5700000000000001
+        },
+        {
+          "name": "Boulder14",
+          "size": [9, 5, 6],
+          "pos": [97, 1.2, -94],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 518, 0]
+        },
+        {
+          "name": "Understory14",
+          "clone": "Scenery.AncientTree",
+          "pos": [106, 0, -90],
+          "scale": 0.69
+        },
+        {
+          "name": "Boulder15",
+          "size": [5, 6, 4],
+          "pos": [137, 1.2, -124],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 555, 0]
+        },
+        {
+          "name": "Understory15",
+          "clone": "Scenery.AncientTree",
+          "pos": [146, 0, -120],
+          "scale": 0.45
+        },
+        {
+          "name": "Boulder16",
+          "size": [7, 3, 5],
+          "pos": [-143, 1.2, 72],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 592, 0]
+        },
+        {
+          "name": "Understory16",
+          "clone": "Scenery.AncientTree",
+          "pos": [-134, 0, 76],
+          "scale": 0.5700000000000001
+        },
+        {
+          "name": "Boulder17",
+          "size": [9, 4, 6],
+          "pos": [-103, 1.2, 123],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 629, 0]
+        },
+        {
+          "name": "Understory17",
+          "clone": "Scenery.AncientTree",
+          "pos": [-94, 0, 127],
+          "scale": 0.69
+        },
+        {
+          "name": "Boulder18",
+          "size": [5, 5, 4],
+          "pos": [-63, 1.2, 72],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 666, 0]
+        },
+        {
+          "name": "Understory18",
+          "clone": "Scenery.AncientTree",
+          "pos": [-54, 0, 76],
+          "scale": 0.45
+        },
+        {
+          "name": "Boulder19",
+          "size": [7, 6, 5],
+          "pos": [-23, 1.2, 123],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 703, 0]
+        },
+        {
+          "name": "Understory19",
+          "clone": "Scenery.AncientTree",
+          "pos": [-14, 0, 127],
+          "scale": 0.5700000000000001
+        },
+        {
+          "name": "Boulder24",
+          "size": [5, 3, 4],
+          "pos": [-143, 1.2, 72],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 888, 0]
+        },
+        {
+          "name": "Understory24",
+          "clone": "Scenery.AncientTree",
+          "pos": [-134, 0, 76],
+          "scale": 0.45
+        },
+        {
+          "name": "Boulder25",
+          "size": [7, 4, 5],
+          "pos": [-103, 1.2, 123],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 925, 0]
+        },
+        {
+          "name": "Understory25",
+          "clone": "Scenery.AncientTree",
+          "pos": [-94, 0, 127],
+          "scale": 0.5700000000000001
+        },
+        {
+          "name": "Boulder26",
+          "size": [9, 5, 6],
+          "pos": [-63, 1.2, 72],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 962, 0]
+        },
+        {
+          "name": "Understory26",
+          "clone": "Scenery.AncientTree",
+          "pos": [-54, 0, 76],
+          "scale": 0.69
+        },
+        {
+          "name": "Boulder27",
+          "size": [5, 6, 4],
+          "pos": [-23, 1.2, 123],
+          "color": [74, 106, 69],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 999, 0]
+        },
+        {
+          "name": "Understory27",
+          "clone": "Scenery.AncientTree",
+          "pos": [-14, 0, 127],
+          "scale": 0.45
+        }
+      ]
+    }
+  ],
+  "attrs": {
+    "RegionId": "Verdant",
+    "RegionName": "WHISPERING WILDS",
+    "RouteOrder": 1,
+    "AuthoredBy": "WorldArt",
+    "ArtVersion": 1
+  }
+}

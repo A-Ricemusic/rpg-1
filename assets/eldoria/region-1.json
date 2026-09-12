@@ -1,0 +1,893 @@
+{
+  "name": "04_EmberfallCaldera",
+  "kind": "Model",
+  "children": [
+    {
+      "name": "Landmass",
+      "size": [340, 20, 280],
+      "pos": [360, -9.88, 0],
+      "color": [68, 53, 51],
+      "material": "Basalt"
+    },
+    {
+      "name": "PilgrimRoad",
+      "size": [340, 0.3, 18],
+      "pos": [360, 0.15, 0],
+      "color": [165, 151, 124],
+      "material": "Cobblestone",
+      "attrs": { "RouteId": "Ember_Main", "Walkable": true }
+    },
+    {
+      "name": "SanctumApproach",
+      "size": [18, 0.3, 90],
+      "pos": [425, 0.15, 45],
+      "color": [165, 151, 124],
+      "material": "Cobblestone"
+    },
+    {
+      "name": "CampApproach",
+      "size": [18, 0.3, 75],
+      "pos": [275, 0.15, -37],
+      "color": [165, 151, 124],
+      "material": "Cobblestone"
+    },
+    {
+      "name": "Entrance",
+      "size": [2, 0.2, 2],
+      "pos": [195, 1, 0],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Entrance", "RegionId": "Ember", "RouteOrder": 2 }
+    },
+    {
+      "name": "Exit",
+      "size": [2, 0.2, 2],
+      "pos": [525, 1, 0],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Exit", "RegionId": "Ember", "NextRegion": "Frost" }
+    },
+    { "name": "EntryColumn-1", "clone": "Scenery.TempleColumn", "pos": [208, 0, -14], "scale": 1 },
+    {
+      "name": "EntryAccent-1",
+      "size": [2, 9, 0.4],
+      "pos": [208, 8, -15.3],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "light": 18,
+      "collide": false
+    },
+    { "name": "EntryColumn1", "clone": "Scenery.TempleColumn", "pos": [208, 0, 14], "scale": 1 },
+    {
+      "name": "EntryAccent1",
+      "size": [2, 9, 0.4],
+      "pos": [208, 8, 12.7],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "light": 18,
+      "collide": false
+    },
+    {
+      "name": "EntranceLintel",
+      "size": [6, 3, 34],
+      "pos": [208, 16, 0],
+      "color": [68, 53, 51],
+      "material": "Basalt"
+    },
+    {
+      "name": "RegionSign",
+      "size": [18, 5, 1],
+      "pos": [211, 12, 0],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "text": "EMBERFALL CALDERA",
+      "collide": false,
+      "rot": [0, 90, 0]
+    },
+    {
+      "name": "CampSquare",
+      "size": [65, 0.4, 48],
+      "pos": [275, 0.2, -64],
+      "color": [129, 120, 102],
+      "material": "Cobblestone"
+    },
+    { "name": "MerchantStall", "clone": "Scenery.MarketStall", "pos": [255, 0, -75], "scale": 1 },
+    { "name": "Merchant", "clone": "Characters.Merchant", "pos": [255, 0, -71], "scale": 1 },
+    {
+      "name": "MerchantLocation",
+      "size": [2, 0.2, 2],
+      "pos": [255, 1, -66],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Merchant", "RegionId": "Ember" }
+    },
+    { "name": "OraclePavilion", "clone": "Scenery.MarketStall", "pos": [293, 0, -75], "scale": 1 },
+    { "name": "QuestGiver", "clone": "Characters.QuestGiver", "pos": [293, 0, -71], "scale": 1 },
+    {
+      "name": "QuestGiverLocation",
+      "size": [2, 0.2, 2],
+      "pos": [293, 1, -66],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "QuestGiver", "RegionId": "Ember" }
+    },
+    {
+      "name": "ShopDisplayHealingPotion",
+      "clone": "Items.HealingPotion",
+      "pos": [252, 3.5, -75],
+      "scale": 1
+    },
+    { "name": "ShopDisplayCoin", "clone": "Items.Coin", "pos": [255, 3.5, -75], "scale": 1 },
+    { "name": "ShopDisplayCrystal", "clone": "Items.Crystal", "pos": [258, 3.5, -75], "scale": 1 },
+    {
+      "name": "CampNotice",
+      "size": [12, 4, 0.5],
+      "pos": [275, 4, -88],
+      "color": [91, 61, 42],
+      "material": "Wood",
+      "text": "SANCTUARY • SUPPLIES"
+    },
+    {
+      "name": "Bench-1",
+      "size": [9, 1, 2],
+      "pos": [259, 1, -50],
+      "color": [91, 61, 42],
+      "material": "WoodPlanks"
+    },
+    {
+      "name": "Bench1",
+      "size": [9, 1, 2],
+      "pos": [291, 1, -50],
+      "color": [91, 61, 42],
+      "material": "WoodPlanks"
+    },
+    { "name": "RoadLantern0", "clone": "Scenery.WayLantern", "pos": [230, 0, -13], "scale": 1 },
+    { "name": "RoadLantern1", "clone": "Scenery.WayLantern", "pos": [268, 0, 13], "scale": 1 },
+    { "name": "RoadLantern2", "clone": "Scenery.WayLantern", "pos": [306, 0, -13], "scale": 1 },
+    { "name": "RoadLantern3", "clone": "Scenery.WayLantern", "pos": [344, 0, 13], "scale": 1 },
+    { "name": "RoadLantern4", "clone": "Scenery.WayLantern", "pos": [382, 0, -13], "scale": 1 },
+    { "name": "RoadLantern5", "clone": "Scenery.WayLantern", "pos": [420, 0, 13], "scale": 1 },
+    { "name": "RoadLantern6", "clone": "Scenery.WayLantern", "pos": [458, 0, -13], "scale": 1 },
+    { "name": "RoadLantern7", "clone": "Scenery.WayLantern", "pos": [496, 0, 13], "scale": 1 },
+    {
+      "name": "BossArena",
+      "size": [82, 0.5, 72],
+      "pos": [425, 0.25, 91],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "attrs": { "MarkerType": "BossArena", "RegionId": "Ember" }
+    },
+    {
+      "name": "BossSpawn",
+      "size": [2, 0.2, 2],
+      "pos": [425, 1, 91],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "BossSpawn", "RegionId": "Ember", "EnemyId": "pyre_tyrant" }
+    },
+    {
+      "name": "BossArtwork",
+      "clone": "Characters.pyre_tyrant",
+      "pos": [425, 0.5, 105],
+      "scale": 1
+    },
+    { "name": "ArenaColumn0", "clone": "Scenery.TempleColumn", "pos": [468, 0, 91], "scale": 0.7 },
+    {
+      "name": "ArenaColumn1",
+      "clone": "Scenery.TempleColumn",
+      "pos": [455.40559159102156, 0, 115.74873734152916],
+      "scale": 0.7
+    },
+    { "name": "ArenaColumn2", "clone": "Scenery.TempleColumn", "pos": [425, 0, 126], "scale": 0.7 },
+    {
+      "name": "ArenaColumn3",
+      "clone": "Scenery.TempleColumn",
+      "pos": [394.59440840897844, 0, 115.74873734152916],
+      "scale": 0.7
+    },
+    { "name": "ArenaColumn4", "clone": "Scenery.TempleColumn", "pos": [382, 0, 91], "scale": 0.7 },
+    {
+      "name": "ArenaColumn5",
+      "clone": "Scenery.TempleColumn",
+      "pos": [394.59440840897844, 0, 66.25126265847084],
+      "scale": 0.7
+    },
+    {
+      "name": "ArenaColumn7",
+      "clone": "Scenery.TempleColumn",
+      "pos": [455.40559159102156, 0, 66.25126265847084],
+      "scale": 0.7
+    },
+    {
+      "name": "ArenaThreshold",
+      "size": [24, 0.15, 3],
+      "pos": [425, 0.6, 57],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "collide": false
+    },
+    {
+      "name": "EnemySpawn_01",
+      "size": [2, 0.2, 2],
+      "pos": [340, 1, -38],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Ember", "EnemyId": "cinder_guard" }
+    },
+    {
+      "name": "EnemyArtwork_cinder_guard",
+      "clone": "Characters.cinder_guard",
+      "pos": [340, 0, -38],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_02",
+      "size": [2, 0.2, 2],
+      "pos": [375, 1, -50],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Ember", "EnemyId": "ash_stalker" }
+    },
+    {
+      "name": "EnemyArtwork_ash_stalker",
+      "clone": "Characters.ash_stalker",
+      "pos": [375, 0, -50],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_03",
+      "size": [2, 0.2, 2],
+      "pos": [410, 1, -38],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Ember", "EnemyId": "magma_archer" }
+    },
+    {
+      "name": "EnemyArtwork_magma_archer",
+      "clone": "Characters.magma_archer",
+      "pos": [410, 0, -38],
+      "scale": 1
+    },
+    {
+      "name": "EnemySpawn_04",
+      "size": [2, 0.2, 2],
+      "pos": [445, 1, -50],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "EnemySpawn", "RegionId": "Ember", "EnemyId": "lava_oracle" }
+    },
+    {
+      "name": "EnemyArtwork_lava_oracle",
+      "clone": "Characters.lava_oracle",
+      "pos": [445, 0, -50],
+      "scale": 1
+    },
+    {
+      "name": "Gather_Ore_1",
+      "size": [2, 0.2, 2],
+      "pos": [250, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Ember", "ResourceId": "Ore" }
+    },
+    { "name": "Resource_0_0", "clone": "Items.Ore", "pos": [250, 0, 55], "scale": 1.5 },
+    { "name": "Resource_0_1", "clone": "Items.Ore", "pos": [252, 0, 58], "scale": 1.5 },
+    { "name": "Resource_0_2", "clone": "Items.Ore", "pos": [254, 0, 55], "scale": 1.5 },
+    {
+      "name": "Gather_Crystal_2",
+      "size": [2, 0.2, 2],
+      "pos": [280, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Ember", "ResourceId": "Crystal" }
+    },
+    { "name": "Resource_1_0", "clone": "Items.Crystal", "pos": [280, 0, 55], "scale": 1.5 },
+    { "name": "Resource_1_1", "clone": "Items.Crystal", "pos": [282, 0, 58], "scale": 1.5 },
+    { "name": "Resource_1_2", "clone": "Items.Crystal", "pos": [284, 0, 55], "scale": 1.5 },
+    {
+      "name": "Gather_Ore_3",
+      "size": [2, 0.2, 2],
+      "pos": [310, 1, 55],
+      "color": [202, 164, 83],
+      "material": "SmoothPlastic",
+      "alpha": 1,
+      "collide": false,
+      "attrs": { "MarkerType": "Gathering", "RegionId": "Ember", "ResourceId": "Ore" }
+    },
+    { "name": "Resource_2_0", "clone": "Items.Ore", "pos": [310, 0, 55], "scale": 1.5 },
+    { "name": "Resource_2_1", "clone": "Items.Ore", "pos": [312, 0, 58], "scale": 1.5 },
+    { "name": "Resource_2_2", "clone": "Items.Ore", "pos": [314, 0, 55], "scale": 1.5 },
+    {
+      "name": "ObsidianSpire0",
+      "size": [12, 25, 14],
+      "pos": [225, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, -12]
+    },
+    {
+      "name": "ObsidianSpire1",
+      "size": [18, 37, 14],
+      "pos": [244, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "ObsidianSpire2",
+      "size": [24, 49, 14],
+      "pos": [263, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 12]
+    },
+    {
+      "name": "ObsidianSpire3",
+      "size": [12, 61, 14],
+      "pos": [282, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, -12]
+    },
+    {
+      "name": "ObsidianSpire4",
+      "size": [18, 25, 14],
+      "pos": [301, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "ObsidianSpire5",
+      "size": [24, 37, 14],
+      "pos": [320, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 12]
+    },
+    {
+      "name": "ObsidianSpire6",
+      "size": [12, 49, 14],
+      "pos": [339, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, -12]
+    },
+    {
+      "name": "ObsidianSpire7",
+      "size": [18, 61, 14],
+      "pos": [358, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "ObsidianSpire8",
+      "size": [24, 25, 14],
+      "pos": [377, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 12]
+    },
+    {
+      "name": "ObsidianSpire9",
+      "size": [12, 37, 14],
+      "pos": [396, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, -12]
+    },
+    {
+      "name": "ObsidianSpire10",
+      "size": [18, 49, 14],
+      "pos": [415, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "ObsidianSpire11",
+      "size": [24, 61, 14],
+      "pos": [434, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 12]
+    },
+    {
+      "name": "ObsidianSpire12",
+      "size": [12, 25, 14],
+      "pos": [453, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, -12]
+    },
+    {
+      "name": "ObsidianSpire13",
+      "size": [18, 37, 14],
+      "pos": [472, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "ObsidianSpire14",
+      "size": [24, 49, 14],
+      "pos": [491, 12, -110],
+      "color": [68, 53, 51],
+      "material": "Basalt",
+      "rot": [0, 0, 12]
+    },
+    {
+      "name": "LavaFissure0",
+      "size": [24, 0.1, 7],
+      "pos": [265, 0.22, 35],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "light": 18,
+      "collide": false,
+      "attrs": { "VisualOnly": true }
+    },
+    {
+      "name": "LavaFissure1",
+      "size": [24, 0.1, 7],
+      "pos": [313, 0.22, 35],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "light": 18,
+      "collide": false,
+      "attrs": { "VisualOnly": true }
+    },
+    {
+      "name": "LavaFissure2",
+      "size": [24, 0.1, 7],
+      "pos": [361, 0.22, 35],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "light": 18,
+      "collide": false,
+      "attrs": { "VisualOnly": true }
+    },
+    {
+      "name": "LavaFissure3",
+      "size": [24, 0.1, 7],
+      "pos": [409, 0.22, 35],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "light": 18,
+      "collide": false,
+      "attrs": { "VisualOnly": true }
+    },
+    {
+      "name": "LavaFissure4",
+      "size": [24, 0.1, 7],
+      "pos": [457, 0.22, 35],
+      "color": [255, 111, 42],
+      "material": "Neon",
+      "light": 18,
+      "collide": false,
+      "attrs": { "VisualOnly": true }
+    },
+    {
+      "name": "CalderaAltar",
+      "size": [30, 8, 12],
+      "pos": [425, 4, 124],
+      "color": [38, 32, 33],
+      "material": "Basalt"
+    },
+    {
+      "name": "CalderaCrown0",
+      "size": [8, 25, 10],
+      "pos": [389, 12, 131],
+      "color": [49, 40, 39],
+      "material": "Basalt",
+      "rot": [0, 0, -18]
+    },
+    {
+      "name": "CalderaCrown1",
+      "size": [8, 34, 10],
+      "pos": [407, 12, 131],
+      "color": [49, 40, 39],
+      "material": "Basalt",
+      "rot": [0, 0, -9]
+    },
+    {
+      "name": "CalderaCrown2",
+      "size": [8, 25, 10],
+      "pos": [425, 12, 131],
+      "color": [49, 40, 39],
+      "material": "Basalt",
+      "rot": [0, 0, 0]
+    },
+    {
+      "name": "CalderaCrown3",
+      "size": [8, 34, 10],
+      "pos": [443, 12, 131],
+      "color": [49, 40, 39],
+      "material": "Basalt",
+      "rot": [0, 0, 9]
+    },
+    {
+      "name": "CalderaCrown4",
+      "size": [8, 25, 10],
+      "pos": [461, 12, 131],
+      "color": [49, 40, 39],
+      "material": "Basalt",
+      "rot": [0, 0, 18]
+    },
+    {
+      "name": "LandscapeDetails",
+      "kind": "Folder",
+      "children": [
+        {
+          "name": "Boulder1",
+          "size": [7, 4, 5],
+          "pos": [257, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 37, 0]
+        },
+        {
+          "name": "RelicShard1",
+          "size": [1, 5, 1],
+          "pos": [261, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder3",
+          "size": [5, 6, 4],
+          "pos": [337, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 111, 0]
+        },
+        {
+          "name": "RelicShard3",
+          "size": [1, 4, 1],
+          "pos": [341, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder4",
+          "size": [7, 3, 5],
+          "pos": [377, 1.2, -94],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 148, 0]
+        },
+        {
+          "name": "RelicShard4",
+          "size": [1, 5, 1],
+          "pos": [381, 2, -94],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder5",
+          "size": [9, 4, 6],
+          "pos": [417, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 185, 0]
+        },
+        {
+          "name": "RelicShard5",
+          "size": [1, 6, 1],
+          "pos": [421, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder6",
+          "size": [5, 5, 4],
+          "pos": [457, 1.2, -94],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 222, 0]
+        },
+        {
+          "name": "RelicShard6",
+          "size": [1, 4, 1],
+          "pos": [461, 2, -94],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder7",
+          "size": [7, 6, 5],
+          "pos": [497, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 259, 0]
+        },
+        {
+          "name": "RelicShard7",
+          "size": [1, 5, 1],
+          "pos": [501, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder9",
+          "size": [5, 4, 4],
+          "pos": [257, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 333, 0]
+        },
+        {
+          "name": "RelicShard9",
+          "size": [1, 4, 1],
+          "pos": [261, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder11",
+          "size": [9, 6, 6],
+          "pos": [337, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 407, 0]
+        },
+        {
+          "name": "RelicShard11",
+          "size": [1, 6, 1],
+          "pos": [341, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder12",
+          "size": [5, 3, 4],
+          "pos": [377, 1.2, -94],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 444, 0]
+        },
+        {
+          "name": "RelicShard12",
+          "size": [1, 4, 1],
+          "pos": [381, 2, -94],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder13",
+          "size": [7, 4, 5],
+          "pos": [417, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 481, 0]
+        },
+        {
+          "name": "RelicShard13",
+          "size": [1, 5, 1],
+          "pos": [421, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder14",
+          "size": [9, 5, 6],
+          "pos": [457, 1.2, -94],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 518, 0]
+        },
+        {
+          "name": "RelicShard14",
+          "size": [1, 6, 1],
+          "pos": [461, 2, -94],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder15",
+          "size": [5, 6, 4],
+          "pos": [497, 1.2, -124],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 555, 0]
+        },
+        {
+          "name": "RelicShard15",
+          "size": [1, 4, 1],
+          "pos": [501, 2, -124],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder16",
+          "size": [7, 3, 5],
+          "pos": [217, 1.2, 72],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 592, 0]
+        },
+        {
+          "name": "RelicShard16",
+          "size": [1, 5, 1],
+          "pos": [221, 2, 72],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder17",
+          "size": [9, 4, 6],
+          "pos": [257, 1.2, 123],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 629, 0]
+        },
+        {
+          "name": "RelicShard17",
+          "size": [1, 6, 1],
+          "pos": [261, 2, 123],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder18",
+          "size": [5, 5, 4],
+          "pos": [297, 1.2, 72],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 666, 0]
+        },
+        {
+          "name": "RelicShard18",
+          "size": [1, 4, 1],
+          "pos": [301, 2, 72],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder19",
+          "size": [7, 6, 5],
+          "pos": [337, 1.2, 123],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 703, 0]
+        },
+        {
+          "name": "RelicShard19",
+          "size": [1, 5, 1],
+          "pos": [341, 2, 123],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder24",
+          "size": [5, 3, 4],
+          "pos": [217, 1.2, 72],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 888, 0]
+        },
+        {
+          "name": "RelicShard24",
+          "size": [1, 4, 1],
+          "pos": [221, 2, 72],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder25",
+          "size": [7, 4, 5],
+          "pos": [257, 1.2, 123],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 925, 0]
+        },
+        {
+          "name": "RelicShard25",
+          "size": [1, 5, 1],
+          "pos": [261, 2, 123],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        },
+        {
+          "name": "Boulder26",
+          "size": [9, 5, 6],
+          "pos": [297, 1.2, 72],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 962, 0]
+        },
+        {
+          "name": "RelicShard26",
+          "size": [1, 6, 1],
+          "pos": [301, 2, 72],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, -20]
+        },
+        {
+          "name": "Boulder27",
+          "size": [5, 6, 4],
+          "pos": [337, 1.2, 123],
+          "color": [68, 53, 51],
+          "material": "Rock",
+          "shape": "Ball",
+          "rot": [0, 999, 0]
+        },
+        {
+          "name": "RelicShard27",
+          "size": [1, 4, 1],
+          "pos": [341, 2, 123],
+          "color": [255, 111, 42],
+          "material": "Slate",
+          "rot": [0, 0, 20]
+        }
+      ]
+    }
+  ],
+  "attrs": {
+    "RegionId": "Ember",
+    "RegionName": "EMBERFALL CALDERA",
+    "RouteOrder": 2,
+    "AuthoredBy": "WorldArt",
+    "ArtVersion": 1
+  }
+}

@@ -2,7 +2,6 @@
   "name": "rpg-game-1",
   "tree": {
     "$className": "DataModel",
-
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
       "Shared": {
@@ -22,33 +21,34 @@
             "$path": "node_modules/@rbxts-js"
           }
         }
-      }
+      },
+      "$ignoreUnknownInstances": true
     },
-
     "ServerScriptService": {
       "$className": "ServerScriptService",
-      "$path": "out/ServerScriptService"
+      "$path": "out/ServerScriptService",
+      "$ignoreUnknownInstances": true
     },
-
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
-        "$path": "out/StarterPlayer/StarterPlayerScripts"
+        "$path": "out/StarterPlayer/StarterPlayerScripts",
+        "$ignoreUnknownInstances": true
       }
     },
-
     "StarterGui": {
       "$className": "StarterGui",
-      "$path": "out/StarterGui"
+      "$path": "out/StarterGui",
+      "$ignoreUnknownInstances": true
     },
-
     "Workspace": {
       "$className": "Workspace",
       "$properties": {
         "FilteringEnabled": true,
         "StreamingEnabled": true
-      }
+      },
+      "$ignoreUnknownInstances": true
     }
   }
 }
