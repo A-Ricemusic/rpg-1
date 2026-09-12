@@ -15,3 +15,6 @@ sourcemap.json
 
 # Aftman installs tools globally; keep local generated folders out if present.
 .aftman/
+
+# Exclusive Studio ownership is local coordination state, never project content.
+.agent-studio-lock/

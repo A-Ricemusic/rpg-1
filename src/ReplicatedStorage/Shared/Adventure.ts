@@ -64,6 +64,7 @@ export interface AdventureSnapshot extends AdventureSave {
   nearMerchant: boolean;
   nearForge: boolean;
   objective: string;
+  navigation: string;
 }
 export type AdventureRequest =
   | { kind: "Snapshot" }

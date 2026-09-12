@@ -1,3 +1,6 @@
+import { updateReturn } from "shared/ReturnChannel";
+import { bearing, destination } from "shared/Navigation";
+import { admitRequest } from "shared/RequestGate";
 import { inMeleeArc } from "shared/CombatTargeting";
 import { Players, ReplicatedStorage, RunService, Workspace } from "@rbxts/services";
 import {
@@ -39,6 +42,7 @@ interface State {
   attackAt: number;
   abilityAt: number;
   requestAt: number;
+  snapshotAt: number;
   potionAt: number;
   message: string;
   canSave: boolean;
@@ -74,6 +78,52 @@ function sync(player: Player): void {
   const location = world.locations[d.region];
   const h = player.Character?.FindFirstChildOfClass("Humanoid");
   const stage = d.quests[d.region];
+  const playerRoot = root(player);
+  let navigation = "";
+  if (playerRoot) {
+    const position = playerRoot.Position;
+    const directions = (label: string, target: Vector3): string =>
+      destination(label, target.X - position.X, target.Z - position.Z);
+    let target = location.quest;
+    let label = "Oracle";
+    if (stage === 1) {
+      let distance = math.huge;
+      if (d.gathered[d.region] < 3) {
+        for (const resource of location.resources) {
+          const candidate = resource.position.sub(position).Magnitude;
+          if (candidate < distance) {
+            distance = candidate;
+            target = resource.position;
+            label = resource.item;
+          }
+        }
+      } else if (d.kills[d.region] < 2) {
+        for (const enemy of enemies) {
+          if (
+            enemy.GetAttribute("AdventureRegion") !== d.region ||
+            enemy.GetAttribute("Boss") === true ||
+            (enemy.FindFirstChildOfClass("Humanoid")?.Health ?? 0) <= 0 ||
+            !enemy.PrimaryPart
+          )
+            continue;
+          const candidate = enemy.PrimaryPart.Position.sub(position).Magnitude;
+          if (candidate < distance) {
+            distance = candidate;
+            target = enemy.PrimaryPart.Position;
+            label = "Enemy";
+          }
+        }
+      }
+    } else if (stage === 2 && !d.bosses[d.region]) {
+      target = location.boss;
+      label = "Boss";
+    } else if (stage === 3) {
+      target = location.spawn;
+      label = "Camp";
+    }
+    const facing = playerRoot.CFrame.LookVector;
+    navigation = `Facing ${bearing(facing.X, facing.Z)} • ${directions(label, target)}\n${directions("Camp", location.spawn)}`;
+  }
   const objective =
     stage === 0
       ? "Speak to the Oracle or accept the regional quest."
@@ -99,6 +149,7 @@ function sync(player: Player): void {
     nearMerchant: near(player, location.merchant),
     nearForge: near(player, location.forge),
     objective,
+    navigation,
   };
   player.SetAttribute("Region", d.region);
   player.SetAttribute("AtCamp", near(player, location.spawn, 55));
@@ -500,8 +551,7 @@ request.OnServerEvent.Connect((player, raw: unknown) => {
   const r = raw as AdventureRequest;
   if (!typeIs(r.kind, "string")) return;
   const now = os.clock();
-  if (now - s.requestAt < 0.06) return;
-  s.requestAt = now;
+  if (!admitRequest(s, r.kind, now)) return;
   if (r.kind === "Snapshot") {
     sync(player);
     return;
@@ -569,12 +619,29 @@ request.OnServerEvent.Connect((player, raw: unknown) => {
     if (now < s.returnAt) return;
     s.returnAt = now + 10;
     message(player, "Returning to camp in 3 seconds. Stand still and avoid damage.");
+    const character = player.Character;
     const start = root(player)?.Position;
-    const health = player.Character?.FindFirstChildOfClass("Humanoid")?.Health;
+    const humanoid = character?.FindFirstChildOfClass("Humanoid");
+    if (!start || !humanoid) return;
+    const channel = { cancelled: false, lastHealth: humanoid.Health };
+    const healthConnection = humanoid.HealthChanged.Connect((health) =>
+      updateReturn(channel, health, 0, player.Character === character),
+    );
+    const movementConnection = RunService.Heartbeat.Connect(() => {
+      const current = root(player);
+      updateReturn(
+        channel,
+        humanoid.Health,
+        current ? current.Position.sub(start).Magnitude : math.huge,
+        player.Character === character && states.get(player) === s,
+      );
+    });
     task.delay(3, () => {
-      const h = player.Character?.FindFirstChildOfClass("Humanoid");
-      if (start && near(player, start, 4) && h && h.Health === health && alive(player)) {
-        player.Character?.PivotTo(new CFrame(world.locations[s.data.region].spawn));
+      healthConnection.Disconnect();
+      movementConnection.Disconnect();
+      if (states.get(player) !== s) return;
+      if (!channel.cancelled && player.Character === character && alive(player)) {
+        character?.PivotTo(new CFrame(world.locations[s.data.region].spawn));
         message(player, "Returned to camp.");
       } else message(player, "Return interrupted.");
     });
@@ -585,7 +652,10 @@ request.OnServerEvent.Connect((player, raw: unknown) => {
 });
 function join(player: Player): void {
   const [data, canSave, saveStatus] = persistence.load(player);
-  if (player.Parent !== Players) return;
+  if (player.Parent !== Players) {
+    if (canSave) persistence.save(player, data, true);
+    return;
+  }
   states.set(player, {
     data,
     canSave,
@@ -595,6 +665,7 @@ function join(player: Player): void {
     attackAt: 0,
     abilityAt: 0,
     requestAt: 0,
+    snapshotAt: -100,
     potionAt: 0,
     saveAt: -100,
     returnAt: 0,

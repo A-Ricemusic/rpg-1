@@ -75,7 +75,10 @@ export class AdventureWorld {
       : "Temporary test world — authored world unavailable";
     REGIONS.forEach((region, index) => {
       const model = this.authored?.FindFirstChild(region.model);
-      const center = new Vector3(index * 360, 0, 0);
+      const authoredCenter = model?.GetAttribute("WorldCenter");
+      const center = typeIs(authoredCenter, "Vector3")
+        ? authoredCenter
+        : new Vector3(index * 360, 0, 0);
       const marker = (names: readonly string[], fallback: Vector3): Vector3 => {
         for (const name of names) {
           const found =

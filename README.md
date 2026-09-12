@@ -10,6 +10,8 @@ Use the existing authored Studio place and the existing Rojo server for this che
 
 [Full play instructions, verification and limitations](docs/handoffs/gameplay.md) · [World and asset handoff](docs/handoffs/world.md)
 
+[Repeatable playtest procedure](docs/playtesting.md) covers exclusive Studio ownership, session deadlines, cleanup, and the feature checklist. Journey now shows objective distance/direction for the expanded world.
+
 ```sh
 bun run format
 bun run typecheck

@@ -1,0 +1,24 @@
+{
+  "weaponsUnchangedAndUsable": true,
+  "routeLengthStuds": 36845,
+  "errors": [],
+  "routeCount": 117,
+  "samples": 3866,
+  "markers": {
+    "Exit": 5,
+    "Merchant": 5,
+    "Vista": 5,
+    "BossArena": 5,
+    "BossSpawn": 5,
+    "Gathering": 45,
+    "EnemySpawn": 20,
+    "Discovery": 23,
+    "CampSpawn": 5,
+    "TrailJunction": 50,
+    "Blacksmith": 5,
+    "WorldRoute": 16,
+    "Entrance": 5,
+    "QuestGiver": 5
+  },
+  "discoveries": 23
+}

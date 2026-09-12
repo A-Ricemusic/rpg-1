@@ -4,7 +4,7 @@
 <text x="45" y="54" font-size="34">ELDORIA · THE PILGRIM BASINS</text>
 <text class="small" x="45" y="82">Authored layout • north is −Z • five regions, branching trails and an outer circuit</text>
 <polyline points="404.8,565.0 368.0,531.0 358.0,437.0 345.2,345.0" fill="none" stroke="#b9aa87" stroke-width="5" stroke-linejoin="round"/>
-<polyline points="504.0,449.8 548.0,409.0 638.0,377.0 714.0,370.2" fill="none" stroke="#b9aa87" stroke-width="5" stroke-linejoin="round"/>
+<polyline points="504.0,449.8 548.0,409.0 638.0,377.0 734.0,370.2" fill="none" stroke="#b9aa87" stroke-width="5" stroke-linejoin="round"/>
 <polyline points="635.2,565.0 675.0,587.0 694.0,655.0 714.8,695.0" fill="none" stroke="#b9aa87" stroke-width="5" stroke-linejoin="round"/>
 <polyline points="524.0,680.2 474.0,721.0 416.0,767.0 405.2,815.0" fill="none" stroke="#b9aa87" stroke-width="5" stroke-linejoin="round"/>
 <polyline points="214.0,229.8 274.0,181.0 436.0,133.0 588.0,125.0 714.0,139.8" fill="none" stroke="#b9aa87" stroke-width="5" stroke-linejoin="round"/>

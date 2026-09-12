@@ -95,6 +95,7 @@ function launchProjectile(
 }
 
 function spikeAttack(
+  source: Model,
   targetPosition: Vector3,
   definition: EnemyDefinition,
   callbacks: EnemyCallbacks,
@@ -112,6 +113,10 @@ function spikeAttack(
   warning.Transparency = 0.35;
   task.delay(definition.boss ? 0.7 : 1, () => {
     if (!warning.Parent) return;
+    if (!source.Parent || (source.FindFirstChildOfClass("Humanoid")?.Health ?? 0) <= 0) {
+      warning.Destroy();
+      return;
+    }
     warning.Destroy();
     const spike = effectPart(
       "EnergySpike",
@@ -124,6 +129,7 @@ function spikeAttack(
       const root = player.Character?.FindFirstChild("HumanoidRootPart");
       if (
         root?.IsA("BasePart") &&
+        math.abs(root.Position.Y - targetPosition.Y) <= 8 &&
         new Vector3(root.Position.X, 0, root.Position.Z).sub(
           new Vector3(targetPosition.X, 0, targetPosition.Z),
         ).Magnitude <= radius
@@ -134,7 +140,12 @@ function spikeAttack(
   });
 }
 
-function novaAttack(origin: Vector3, definition: EnemyDefinition, callbacks: EnemyCallbacks): void {
+function novaAttack(
+  source: Model,
+  origin: Vector3,
+  definition: EnemyDefinition,
+  callbacks: EnemyCallbacks,
+): void {
   const color = Color3.fromRGB(definition.accent[0], definition.accent[1], definition.accent[2]);
   const radius = definition.range;
   const warning = effectPart(
@@ -150,6 +161,10 @@ function novaAttack(origin: Vector3, definition: EnemyDefinition, callbacks: Ene
   warning.Transparency = 0.55;
   task.delay(0.85, () => {
     if (!warning.Parent) return;
+    if (!source.Parent || (source.FindFirstChildOfClass("Humanoid")?.Health ?? 0) <= 0) {
+      warning.Destroy();
+      return;
+    }
     Players.GetPlayers().forEach((player) => {
       const root = player.Character?.FindFirstChild("HumanoidRootPart");
       if (root?.IsA("BasePart") && root.Position.sub(origin).Magnitude <= radius)
@@ -288,14 +303,18 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
         task.delay(0.55, () => {
           const currentRoot = player.Character?.FindFirstChild("HumanoidRootPart");
           if (
+            instance.Parent !== undefined &&
+            humanoid.Health > 0 &&
+            currentRoot === targetRoot &&
             currentRoot?.IsA("BasePart") &&
             currentRoot.Position.sub(root.Position).Magnitude <= 7
           )
             callbacks.damagePlayer(player, definition.damage);
         });
       } else if (definition.attack === "Spike")
-        spikeAttack(targetRoot.Position, definition, callbacks);
-      else if (definition.attack === "Nova") novaAttack(root.Position, definition, callbacks);
+        spikeAttack(instance, targetRoot.Position, definition, callbacks);
+      else if (definition.attack === "Nova")
+        novaAttack(instance, root.Position, definition, callbacks);
       else
         rangedAttack(
           root,
@@ -306,7 +325,7 @@ export function startEnemySystem(callbacks: EnemyCallbacks): RBXScriptConnection
           callbacks,
         );
       if (definition.id === "null_sovereign" && enraged)
-        spikeAttack(targetRoot.Position, definition, callbacks);
+        spikeAttack(instance, targetRoot.Position, definition, callbacks);
       if (enraged) cooldowns.set(instance, now + definition.cooldown * 0.7);
     }
   });

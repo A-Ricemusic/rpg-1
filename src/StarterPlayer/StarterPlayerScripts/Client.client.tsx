@@ -101,20 +101,14 @@ function App(): React.Element {
         if (e.kind === "Open" && e.panel) setPanel(e.panel);
       },
     );
-    let active = true;
-    task.spawn(() => {
-      while (active) {
-        send({ kind: "Snapshot" });
-        task.wait(2);
-      }
-    });
+    // The server pushes state four times per second, including after loading completes.
+    send({ kind: "Snapshot" });
     const keyboard = UserInputService.InputBegan.Connect((input, processed) => {
       if (processed) return;
       if (input.KeyCode === Enum.KeyCode.I) setPanel((p) => (p === "Inventory" ? "" : "Inventory"));
       if (input.KeyCode === Enum.KeyCode.J) setPanel((p) => (p === "Journey" ? "" : "Journey"));
     });
     return () => {
-      active = false;
       connection.Disconnect();
       keyboard.Disconnect();
     };
@@ -225,11 +219,7 @@ function App(): React.Element {
                 text={s.quests[s.region] === 0 ? "Accept quest" : "Claim quest reward"}
                 action={() => send({ kind: "Quest" })}
               />
-              <Label
-                order={3}
-                height={50}
-                text="Gold beacons: Oracle, merchant, forge, resources and boss. Camp is a safe zone."
-              />
+              <Label order={3} height={50} text={s.navigation} />
               {REGIONS.map((r, i) => (
                 <Button
                   key={r.id}

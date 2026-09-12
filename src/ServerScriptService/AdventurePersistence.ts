@@ -1,3 +1,4 @@
+import { acquireSave, writeSave } from "shared/SaveLease";
 import { DataStoreService, HttpService } from "@rbxts/services";
 import { AdventureSave, freshAdventure } from "shared/Adventure";
 import { sanitize } from "shared/AdventureValidation";
@@ -21,20 +22,7 @@ export class AdventurePersistence {
     for (let attempt = 1; attempt <= 3; attempt++) {
       const [ok, result] = pcall(() =>
         store.UpdateAsync(tostring(player.UserId), (old: unknown) => {
-          const envelope: Envelope = typeIs(old, "table") ? (old as Envelope) : {};
-          if (
-            typeIs(envelope.session, "string") &&
-            envelope.session !== this.session &&
-            typeIs(envelope.expires, "number") &&
-            envelope.expires > os.time()
-          )
-            return $tuple(undefined);
-
-          return $tuple({
-            data: sanitize(envelope.data),
-            session: this.session,
-            expires: os.time() + 180,
-          });
+          return $tuple(acquireSave(old, this.session, os.time()));
         }),
       );
       if (ok && typeIs(result, "table") && (result as Envelope).session === this.session)
@@ -53,14 +41,7 @@ export class AdventurePersistence {
     const snapshot = sanitize(data);
     const [ok, failure] = pcall(() =>
       store.UpdateAsync(tostring(player.UserId), (old: unknown) => {
-        if (!typeIs(old, "table") || (old as Envelope).session !== this.session)
-          return $tuple(undefined);
-
-        return $tuple({
-          data: snapshot,
-          session: release ? "" : this.session,
-          expires: release ? 0 : os.time() + 180,
-        });
+        return $tuple(writeSave(old, snapshot, this.session, os.time(), release));
       }),
     );
     if (!ok) warn(`Demigod save failed: ${failure}`);

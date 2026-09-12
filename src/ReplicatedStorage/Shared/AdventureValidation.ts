@@ -13,7 +13,7 @@ export function sanitize(value: unknown): AdventureSave {
   fresh.coins = number(raw.coins, 10000000);
   fresh.xp = number(raw.xp, 1000000);
   fresh.unlocked = number(raw.unlocked, 4);
-  fresh.region = math.min(number(raw.region, 4), fresh.unlocked);
+  fresh.region = number(raw.region, 4);
   if (typeIs(raw.inventory, "table"))
     for (const item of ITEMS) fresh.inventory[item] = number(raw.inventory[item], 9999);
   if (typeIs(raw.upgrades, "table"))
@@ -27,6 +27,18 @@ export function sanitize(value: unknown): AdventureSave {
     fresh.gathered[i] = typeIs(raw.gathered, "table") ? number(raw.gathered[i], 10000) : 0;
     fresh.bosses[i] = typeIs(raw.bosses, "table") && raw.bosses[i] === true;
   }
+  // Unlocks follow completed boss quests, not a separately stored counter.
+  fresh.unlocked = 0;
+  for (let i = 0; i < 5; i++) {
+    if (i > fresh.unlocked) {
+      fresh.quests[i] = 0;
+      fresh.bosses[i] = false;
+    } else {
+      if (fresh.quests[i] === 3 && !fresh.bosses[i]) fresh.quests[i] = 2;
+      if (i < 4 && fresh.quests[i] === 3 && fresh.bosses[i]) fresh.unlocked = i + 1;
+    }
+  }
+  fresh.region = math.min(fresh.region, fresh.unlocked);
   fresh.victory = fresh.quests[4] === 3 && fresh.bosses[4];
   return fresh;
 }

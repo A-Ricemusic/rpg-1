@@ -205,3 +205,70 @@ world:SetAttribute("Layout","Heartland + four surrounding basins + outer pilgrim
 return {connections=#trails}
 `;
 writeFileSync(new URL("connections.luau", import.meta.url), connections);
+export const polish =
+  common +
+  String.raw`
+for i,r in regions do
+ local m=world[r.name];local f=m.ExpansiveLandscape;local origin=Vector3.new(r.x,0,r.z);local sc=f.Scenery
+ -- Fit entry art to the slanted approach while preserving the center-defining marker pair.
+ for _,o in m:GetChildren() do if o.Name:match("^Entry") or o.Name=="EntranceLintel" or o.Name=="RegionSign" then move(o,Vector3.new(0,0,-23)) end end
+ local gate=sc:FindFirstChild("ArrivalMoonGate");if gate then move(gate,Vector3.new(0,0,-23)) end
+ -- Trail junction aprons remove sharp overlapping strip corners.
+ for j,p in nodes do local disk=part(sc,"JunctionApron_"..j,Vector3.new(1,23,23),CFrame.new(origin+vec(p)+Vector3.new(0,.6,0))*CFrame.Angles(0,0,math.pi/2),Enum.Material.Ground,r.color);disk.Shape=Enum.PartType.Cylinder end
+ if i==2 or i==5 then
+  local disk=part(sc,i==2 and "CalderaPool" or "PoolOfEchoes",Vector3.new(.4,124,124),CFrame.new(origin+Vector3.new(150,-2.7,100))*CFrame.Angles(0,0,math.pi/2),Enum.Material.Neon,i==2 and Color3.fromRGB(246,83,23) or Color3.fromRGB(103,56,176),false);disk.Shape=Enum.PartType.Cylinder;disk.Transparency=i==2 and .05 or .28
+ end
+ local color=i==1 and Color3.fromRGB(207,230,152) or i==2 and Color3.fromRGB(255,105,36) or i==3 and Color3.fromRGB(151,222,255) or i==4 and Color3.fromRGB(171,191,255) or Color3.fromRGB(162,105,238)
+ for j,p in side do local q=part(sc,"RegionalLight_"..j,Vector3.one,CFrame.new(origin+vec(p)+Vector3.new(0,12,0)),Enum.Material.SmoothPlastic,color,false);q.Transparency=1;q.CanQuery=false;local light=Instance.new("PointLight");light.Color=color;light.Brightness=1.5;light.Range=45;light.Parent=q end
+ if i==5 then
+  for j=0,2 do local a=j*math.pi/3;local p=origin+Vector3.new(280+math.cos(a)*90,5,290+math.sin(a)*90);mesh(sc,"SanctumSpire_"..j,"UnderworldCrag",p,10,j*60) end
+ end
+ local routes=f.Routes
+ local shortcut=routes:FindFirstChild("LoopTrail_11");shortcut:Destroy()
+ route(routes,"LoopTrail_11",origin+Vector3.new(-85,.65,-120),origin+Vector3.new(110,.65,-310),16,r.color)
+ route(routes,"CampAlley",origin+Vector3.new(-85,.65,-64),origin+Vector3.new(-85,.65,-120),12,r.color)
+ local notice=m:FindFirstChild("CampNotice");if notice then move(notice,Vector3.new(-40,0,0)) end
+ for _,p in sc:GetChildren() do if p:IsA("BasePart") and p.Name:match("^VistaHandrail") then CS:RemoveTag(p,"EldoriaRoute");p:SetAttribute("RouteStart",nil);p:SetAttribute("RouteEnd",nil) end end
+ -- Existing boss and NPC geometry remains unchanged; only landscape is added.
+end
+return {polished=true}
+`;
+writeFileSync(new URL("polish.luau", import.meta.url), polish);
+export const finish =
+  common +
+  String.raw`
+local forest=world[regions[1].name].ExpansiveLandscape
+local sc=forest.Scenery
+for i,p in side do
+ for j=0,11 do local a=j*math.pi/6;local x,z=p[1]+math.cos(a)*68,p[3]+math.sin(a)*68
+  -- Trees frame destination clearings; preserve the 22-stud trail corridor.
+  local d=math.huge;for _,e in edges do d=math.min(d,distance(x,z,nodes[e[1]],nodes[e[2]])) end
+  if d>24 then mesh(sc,"DestinationGrove_"..i.."_"..j,"ElderOak",Vector3.new(x,height(x,z,1)-1,z),1.8+(j%3)*.18,j*71) end
+ end
+end
+local terrainOnly=RaycastParams.new();terrainOnly.FilterType=Enum.RaycastFilterType.Include;terrainOnly.FilterDescendantsInstances={workspace.Terrain}
+local grounded=0
+for _,r in regions do
+ local f=world[r.name].ExpansiveLandscape
+ for _,m in f:GetDescendants() do if m:IsA("Model") and (m.Name:match("^RidgeCluster") or m.Name:match("^Outcrop") or m.Name:match("^QuarryFace") or m.Name:match("^SanctumSpire")) then
+  if r.id=="Verdant" and m.Name:match("^RidgeCluster") then m:ScaleTo(m:GetScale()*.7) end
+  local cf,size=m:GetBoundingBox();local minY=math.huge
+  for _,a in {{0,0},{-.3,-.3},{.3,-.3},{-.3,.3},{.3,.3}} do local at=cf.Position+Vector3.new(size.X*a[1],200,size.Z*a[2]);local hit=workspace:Raycast(at,Vector3.new(0,-500,0),terrainOnly);if hit then minY=math.min(minY,hit.Position.Y) end end
+  if minY<math.huge then m:PivotTo(m:GetPivot()+Vector3.new(0,minY-(cf.Position.Y-size.Y*.5)-3,0));grounded+=1 end
+ end end
+end
+for _,group in world.WorldTrails:GetChildren() do
+ local paths={};for _,p in group:GetChildren() do if p:IsA("BasePart") and p:GetAttribute("RouteStart") then table.insert(paths,p) end end
+ table.sort(paths,function(a,b)return a.Name<b.Name end)
+ local p=paths[math.ceil(#paths/2)];if p then
+  local a,b=p:GetAttribute("RouteStart"),p:GetAttribute("RouteEnd");local cf=CFrame.lookAt((a+b)/2,b);local at=(a+b)/2+cf.RightVector*39-Vector3.new(0,.65,0)
+  local f=folder(group,"PilgrimWaystation")
+  mesh(f,"Shelter","MerchantPavilion",at,1.15,0)
+  mesh(f,"RestShrine","WayShrine",at+cf.LookVector*20,1.1,0)
+  marker(f,"Discovery_"..group.Name.."_Waystation",at+Vector3.yAxis,"Discovery",group:GetAttribute("FromRegion"))
+ end
+end
+world:SetAttribute("ExpansionComplete",true)
+return {groundedRockClusters=grounded,waystations=8}
+`;
+writeFileSync(new URL("finish.luau", import.meta.url), finish);

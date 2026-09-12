@@ -46,7 +46,28 @@ test("corrupt saved fields cannot create invalid equipment, NaN stats or missing
   expect(fixed.equipped).toBe("Sword");
   expect(fixed.inventory.Sword).toBe(1);
   expect(fixed.upgrades.Sword).toBe(5);
-  expect(fixed.region).toBe(1);
+  expect(fixed.region).toBe(0);
   expect(fixed.quests).toEqual([0, 0, 0, 0, 0]);
   expect(fixed.victory).toBe(false);
+});
+test("unlock and victory counters cannot bypass sequential boss quests", () => {
+  const s = freshAdventure();
+  s.unlocked = 4;
+  s.region = 4;
+  s.victory = true;
+  s.quests = [3, 2, 3, 3, 3];
+  s.bosses = [true, false, true, true, true];
+  const fixed = sanitize(s);
+  expect(fixed.unlocked).toBe(1);
+  expect(fixed.region).toBe(1);
+  expect(fixed.quests).toEqual([3, 2, 0, 0, 0]);
+  expect(fixed.victory).toBe(false);
+});
+test("completed quests recover an understated unlock counter", () => {
+  const s = freshAdventure();
+  s.region = 1;
+  s.quests[0] = 3;
+  s.bosses[0] = true;
+  expect(sanitize(s).region).toBe(1);
+  expect(sanitize(s).unlocked).toBe(1);
 });
